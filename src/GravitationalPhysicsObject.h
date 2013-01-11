@@ -12,9 +12,12 @@
 #include "PhysicsObject.h"
 
 class GravitationalPhysicsObject : public PhysicsObject {
-        
-    void update(vector<PhysicsObject*> &otherObjects, float dTime);
-    
+
+    // Force applied by other object
+    virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime);
+    virtual void collide(PhysicsObject * otherObject) {};
+    virtual void draw() = 0;
+
 };
 
 #endif /* defined(__raizWall__GravitationalPhysicsObject__) */

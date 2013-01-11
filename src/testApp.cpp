@@ -16,7 +16,7 @@ void testApp::setup(){
     physicsManager.addObject(dot);
     
     dot = new DotPhysicsObject(14, ofColor(255,255,255));
-    dot->position = ofVec2f(20,20);
+    dot->position = ofVec2f(30,20);
     physicsManager.addObject(dot);
 }
 

@@ -17,6 +17,7 @@ public:
     
     DotPhysicsObject(float _radius, ofColor _color);
     
+    void collide(PhysicsObject * otherObject);
     void bounce();
     void draw();
     

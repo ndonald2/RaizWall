@@ -14,6 +14,21 @@ DotPhysicsObject::DotPhysicsObject(float _radius, ofColor _color)
     setColor(_color);
 }
 
+void DotPhysicsObject::collide(PhysicsObject *otherObject)
+{
+    if (typeid(*otherObject) == typeid(DotPhysicsObject))
+    {
+        DotPhysicsObject *otherDot = (DotPhysicsObject*)otherObject;
+        float distAbs = (position - otherDot->position).length();
+        if (distAbs <= radius + otherDot->getRadius())
+        {
+            // TODO: reflect off angle
+            velocity *= -1;
+            otherDot->velocity *= -1;
+        }
+    }
+}
+
 void DotPhysicsObject::bounce()
 {
     // modified bounce

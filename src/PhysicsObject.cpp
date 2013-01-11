@@ -8,8 +8,6 @@
 
 #include "PhysicsObject.h"
 
-#define kPOMinObjectDistance          2.0
-#define kPOGravitationalConstant      100.0
 #define kPOFrictionConstant           0.001
 
 PhysicsObject::PhysicsObject()
@@ -18,6 +16,30 @@ PhysicsObject::PhysicsObject()
     isAnchored = false;
     velocity = ofVec2f();
     position = ofVec2f();
+}
+
+void PhysicsObject::update(vector<PhysicsObject*> &otherObjects, float dTime)
+{    
+    for (int i=0; i<otherObjects.size(); i++){
+        
+        PhysicsObject *otherObject = otherObjects[i];
+        if (otherObject == this) continue;
+        
+        // Step 1: Calculate forces
+        ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
+        ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
+        
+        // update my state
+        ofVec2f acceleration = forceToMe/mass;
+        velocity += acceleration*dTime;
+        
+        // update other state
+        ofVec2f otherAcceleration = forceToOther/otherObject->mass;
+        otherObject->velocity += otherAcceleration*dTime;
+        
+        // detect and resolve collisions
+        collide(otherObject);
+    }
 }
 
 void PhysicsObject::move(float dTime)
