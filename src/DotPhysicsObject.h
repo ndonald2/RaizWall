@@ -25,7 +25,9 @@ public:
     void setRadius(float _radius);
     void setColor(ofColor _color);
     
-private:
+protected:
+    
+    float intersectionFactor(DotPhysicsObject * otherObject, float dTime);
     
     float   radius;
     ofColor color;

@@ -20,6 +20,7 @@ void PhysicsManager::removeObject(PhysicsObject *object)
 
 void PhysicsManager::update(float dTime)
 {
+    // A-posteriori collision detection
 
     // Step 1: Move
     for (int i=0; i<objects.size(); i++)

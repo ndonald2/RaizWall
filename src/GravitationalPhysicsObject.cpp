@@ -11,6 +11,11 @@
 #define kPOMinObjectDistance          2.0
 #define kPOGravitationalConstant      100.0
 
+GravitationalPhysicsObject::GravitationalPhysicsObject()
+{
+    isRepulsor = false;
+}
+
 ofVec2f GravitationalPhysicsObject::forceAppliedTo(PhysicsObject *otherObject, float dTime)
 {
     static float maxDistance = 1000000000000;

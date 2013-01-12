@@ -14,6 +14,9 @@
 class GravitationalPhysicsObject : public PhysicsObject {
 
 public:
+    
+    GravitationalPhysicsObject();
+    
     // Force applied by other object
     virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime);
     
