@@ -24,4 +24,6 @@ class testApp : public ofBaseApp{
     private:
     
         PhysicsManager      physicsManager;
+    
+        float               timeScale;
 };

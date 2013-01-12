@@ -6,23 +6,27 @@
 void testApp::setup(){
     
     ofBackground(0, 0, 0);
-    ofSetFrameRate(60);
     ofSetCircleResolution(32);
     
     // add objects to physics manager
-    DotPhysicsObject *dot = new DotPhysicsObject(120, ofColor(180,200,0));
-    dot->position = ofGetWindowSize()/2.0f;
+    DotPhysicsObject *dot = new DotPhysicsObject(90, ofColor(180,200,0));
     dot->isAnchored = true;
+    dot->position = ofGetWindowSize()/2.0f;
     physicsManager.addObject(dot);
     
-    dot = new DotPhysicsObject(14, ofColor(255,255,255));
-    dot->position = ofVec2f(30,20);
+    dot = new DotPhysicsObject(20, ofColor(255,255,255));
+    dot->mass = 0.01;
+    dot->position = ofVec2f(300,20);
+    dot->velocity = ofVec2f(0,50);
     physicsManager.addObject(dot);
+    
+    timeScale = 1.0f;
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    physicsManager.update(ofGetLastFrameTime());
+    physicsManager.update(ofGetLastFrameTime()*timeScale);
 }
 
 //--------------------------------------------------------------
@@ -32,7 +36,19 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    switch (key) {
+            
+        case OF_KEY_DOWN:
+            timeScale *= 0.5f;
+            break;
+            
+        case OF_KEY_UP:
+            timeScale *= 2.0f;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------

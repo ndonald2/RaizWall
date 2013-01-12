@@ -17,8 +17,7 @@ public:
     
     DotPhysicsObject(float _radius, ofColor _color);
     
-    void collide(PhysicsObject * otherObject);
-    void bounce();
+    void resolveCollisions(vector<PhysicsObject*>  & otherObjects, float dTime);
     void draw();
     
     inline float getRadius() { return radius; };

@@ -13,11 +13,15 @@
 
 class GravitationalPhysicsObject : public PhysicsObject {
 
+public:
     // Force applied by other object
     virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime);
-    virtual void collide(PhysicsObject * otherObject) {};
-    virtual void draw() = 0;
-
+    
+    inline void setIsRepulsor(bool repulsor) { isRepulsor = true; };
+    
+protected:
+    
+    bool isRepulsor;
 };
 
 #endif /* defined(__raizWall__GravitationalPhysicsObject__) */
