@@ -37,6 +37,7 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		F205992516A32FFF00730218 /* PhysicsUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F205992316A32FFF00730218 /* PhysicsUtils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +118,8 @@
 		E4C2424510CC5A17004149E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		F205992316A32FFF00730218 /* PhysicsUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsUtils.cpp; sourceTree = "<group>"; };
+		F205992416A32FFF00730218 /* PhysicsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsUtils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +214,8 @@
 				9A642CB616A0B34000A7F137 /* GravitationalPhysicsObject.cpp */,
 				9A642CB416A0830800A7F137 /* DotPhysicsObject.h */,
 				9A642CB316A0830800A7F137 /* DotPhysicsObject.cpp */,
+				F205992416A32FFF00730218 /* PhysicsUtils.h */,
+				F205992316A32FFF00730218 /* PhysicsUtils.cpp */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -389,6 +394,7 @@
 				9A642CB116A0811700A7F137 /* PhysicsObject.cpp in Sources */,
 				9A642CB516A0830800A7F137 /* DotPhysicsObject.cpp in Sources */,
 				9A642CB816A0B34100A7F137 /* GravitationalPhysicsObject.cpp in Sources */,
+				F205992516A32FFF00730218 /* PhysicsUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 //
 
 #include "PhysicsObject.h"
+#include "PhysicsUtils.h"
 
 PhysicsObject::PhysicsObject()
 {
@@ -16,6 +17,7 @@ PhysicsObject::PhysicsObject()
     mass = 10.0;
     velocity = ofVec2f();
     position = ofVec2f();
+    lastPosition = ofVec2f();
 }
 
 void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
@@ -24,9 +26,9 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
         
         PhysicsObject *otherObject = otherObjects[i];
         
-        // handle collision
+        // handle collisions
         // A-posteriori collision detection
-        if (intersecting(otherObject)){
+        if (intersecting(otherObject) || passedThrough(otherObject) || otherObject->passedThrough(this)){
             
             collide(otherObject, dTime);
             
@@ -36,7 +38,7 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
                 ofVec2f difference = otherObject->position - position;
                 if (difference.length() == 0) difference = ofVec2f(1,0);
                 float overlap = (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position));
-                
+                                
                 difference.normalize();
                 
                 if (isAnchored){
@@ -99,18 +101,17 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
     ofVec2f uvVelocity = velocity.normalized();
     
     // get interpolation (how far along were we in the frame when we collided)
-    float fInterp = intersectionFactor(otherObject, dTime);
+    float dTimeOfCollision = deltaTimeSinceIntersection(otherObject, dTime);
     
     if (!isAnchored){
         // back up one interpolated step for tangential collision
-        position -= velocity * dTime * (1.0f -fInterp);
+        position = lastPosition + velocity*dTimeOfCollision;
     }
     
     if (!otherObject->isAnchored){
         // back other object one interpolated step
-        otherObject->position -= otherObject->velocity * dTime * (1.0 -fInterp);
+        otherObject->position = otherObject->lastPosition + otherObject->velocity*dTimeOfCollision;
     }
-    
     
     ofVec2f collisionVect = (position - otherObject->position);
     collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
@@ -140,6 +141,7 @@ void PhysicsObject::move(float dTime)
     // Update position
     if (!isAnchored){
         velocity *= (1.0f - ambientFriction);
+        lastPosition = position;
         position += velocity*dTime;
     }    
 }
@@ -147,13 +149,34 @@ void PhysicsObject::move(float dTime)
 bool PhysicsObject::intersecting(PhysicsObject *otherObject)
 {
     if (otherObject->boundingRadius == 0 || boundingRadius == 0) return false;
-    
-    float overlap = (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position));
-    return overlap >= 0;
+    return (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position)) >= 0;
 }
 
+bool PhysicsObject::passedThrough(PhysicsObject *otherObject)
+{
+    // see if our line of travel intersected the other object's bounding sphere
+    bool pt = false;
+    
+    // we can't pass through anything if we're anchored or not solid
+    if (!isAnchored & isSolid && otherObject->isSolid){
+        
+        // project distance from last point to other object onto path unit vector
+        ofVec2f lastPosToObject = lastPosition - otherObject->getPosition();
+        ofVec2f pathVec = velocity.normalized();
+        float projectionMag = lastPosToObject.dot(pathVec);
+        if (projectionMag >= 0 && pathVec.length() > 0){
+            
+            ofVec2f projVec = projectionMag * pathVec;
+            float distToObj = lastPosToObject.distance(projVec);
+            pt = (distToObj >= boundingRadius + otherObject->boundingRadius);
+        }
+        
+    }
+    
+    return pt;
+}
 
-float PhysicsObject::intersectionFactor(PhysicsObject *otherObject, float dTime)
+float PhysicsObject::deltaTimeSinceIntersection(PhysicsObject *otherObject, float dTime)
 {
     // Intersection time interpolation
     // http://stackoverflow.com/questions/11369616/circle-circle-collision-prediction
@@ -161,11 +184,8 @@ float PhysicsObject::intersectionFactor(PhysicsObject *otherObject, float dTime)
     float rs = boundingRadius + otherObject->boundingRadius;
     rs *= rs;
     
-    ofVec2f lastPos = position - velocity*dTime;
-    ofVec2f otherLastPos = otherObject->isAnchored ? otherObject->position : otherObject->position - otherObject->velocity*dTime;
-    
     ofVec2f dV = velocity - otherObject->velocity;
-    ofVec2f dP = lastPos - otherLastPos;
+    ofVec2f dP = lastPosition - otherObject->lastPosition;
     
     float A = (dV.x*dV.x + dV.y*dV.y);
     float B = 2.0f * (dV.x*dP.x + dV.y*dP.y);
@@ -177,10 +197,43 @@ float PhysicsObject::intersectionFactor(PhysicsObject *otherObject, float dTime)
         float s1 = (-B + sqrtOp)/(2*A);
         float s2 = (-B - sqrtOp)/(2*A);
         
+        printf("Solutions: %.2f and %.2f\n", s1, s2);
+        
         float ans = MIN(s1,s2);
-        return CLAMP(ans/dTime, 0, 1);
+        return (ans >= 0.0 && ans <= dTime) ? ans : 0.0f;
     }
     else{
         return 0;
+    }
+}
+
+#pragma mark - Setters and Getters
+
+void PhysicsObject::setIsAnchored(bool _isAnchored)
+{
+    isAnchored = _isAnchored;
+    setVelocity(ofVec2f());
+}
+
+void PhysicsObject::setIsSolid(bool _isSolid)
+{
+    isSolid = _isSolid;
+}
+
+void PhysicsObject::setMass(float newMass)
+{
+    mass = MAX(0, newMass);
+}
+
+void PhysicsObject::setPosition(ofVec2f newPosition)
+{
+    position = newPosition;
+    lastPosition = newPosition;
+}
+
+void PhysicsObject::setVelocity(ofVec2f newVelocity)
+{
+    if (!isAnchored){
+        velocity = newVelocity;
     }
 }

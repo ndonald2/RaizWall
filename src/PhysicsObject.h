@@ -32,20 +32,50 @@ public:
     // Are we intersecting? Basic bounding radius test (can be overridden)
     virtual bool intersecting(PhysicsObject * otherObject);
     
-    // Intersection factor between two circular bounding shapes
-    virtual float intersectionFactor(PhysicsObject * otherObject, float dTime);
+    // Did we pass through this other object on the last frame?
+    virtual bool passedThrough(PhysicsObject * otherObject);
+    
+    // Amount of time since last frame that intersection occurred
+    virtual float deltaTimeSinceIntersection(PhysicsObject * otherObject, float dTime);
     
     // Draw
     virtual void draw() = 0;
     
-    bool    isAnchored;
     
-    float   boundingRadius;
+    //--------- Setters ------------
+    
+    virtual void setIsAnchored(bool _isAnchored);
+    
+    virtual void setIsSolid(bool _isSolid);
+    
+    virtual void setMass(float newMass);
+    
+    virtual void setPosition(ofVec2f newPosition);
+    
+    virtual void setVelocity(ofVec2f newVelocity);
+    
+    
+    //---------- Getters -------------
+    
+    inline bool             getIsAnchored() { return isAnchored; };
+    inline bool             getIsSolid() { return isSolid; };
+    inline float            getMass() { return mass; };
+    inline const ofVec2f  & getPosition() { return position; };
+    inline const ofVec2f  & getLastPosition() { return lastPosition; };
+    inline const ofVec2f  & getVelocity() { return velocity; };
+    
+    
+protected:
+    
+    bool    isAnchored;
+    bool    isSolid;
     
     float   mass;
     float   ambientFriction;
     
+    float   boundingRadius;
     ofVec2f position;
+    ofVec2f lastPosition;
     ofVec2f velocity;
     
 };

@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-#define NUM_DOTS    10
+#define NUM_DOTS    20
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -10,21 +10,22 @@ void testApp::setup(){
     
     // add objects to physics manager
     gravitron = new GravitationalPhysicsObject();
-    gravitron->mass = 0;
-    gravitron->isAnchored = true;
-    gravitron->position = ofGetWindowSize()/2.0f;
+    gravitron->setMass(0);
+    gravitron->setIsSolid(false);
+    gravitron->setIsAnchored(false);
+    gravitron->setPosition(ofGetWindowSize()/2.0f);
     physicsManager.addObject(gravitron);
     
     DotPhysicsObject *sun = new DotPhysicsObject(50, ofColor(255,33,190));
-    sun->isAnchored = true;
-    sun->mass = 300000;
-    sun->position = ofGetWindowSize()/2.0f;
+    sun->setIsAnchored(true);
+    sun->setMass(3000000);
+    sun->setPosition(ofGetWindowSize()/2.0f);
     physicsManager.addObject(sun);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(25,30), ofColor(ofRandom(64,200)));
-        dot->mass = 0.5*dot->boundingRadius;
-        dot->position = ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf());
+        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(10,20), ofColor(ofRandom(64,200)));
+        dot->setMass(dot->getMass()*0.5);
+        dot->setPosition(ofVec2f(100,100) );// ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf()));
         physicsManager.addObject(dot);
     }
     
@@ -35,8 +36,8 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    gravitron->position = ofVec2f(mouseX,mouseY);
-    gravitron->mass = ofGetMousePressed() ? 300000 : 0;
+    gravitron->setPosition(ofVec2f(mouseX,mouseY));
+    gravitron->setMass(ofGetMousePressed() ? 300000 : 0);
 
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }

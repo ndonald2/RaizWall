@@ -28,6 +28,7 @@ public:
     // so forces don't become ridiculously large
     float minDistanceThresh;
     
+    
 protected:
     
     bool isRepulsor;

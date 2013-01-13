@@ -23,16 +23,16 @@ ofVec2f GravitationalPhysicsObject::forceAppliedTo(PhysicsObject *otherObject, f
 
     ofVec2f force = ofVec2f();
     
-    if (!otherObject->isAnchored){
+    if (!otherObject->getIsAnchored()){
     
-        ofVec2f pDiff       = position - otherObject->position;
+        ofVec2f pDiff       = position - otherObject->getPosition();
         ofVec2f pDiffNorm   = pDiff.normalized();
         float   pDiffAbs    = MAX(pDiff.length(), minDistanceThresh);
         
         // too far away to care?
         if (pDiffAbs <= maxDistance){
             
-            float absForce = kPOGravitationalConstant * mass * otherObject->mass / powf(pDiffAbs, 2.0);
+            float absForce = kPOGravitationalConstant * mass * otherObject->getMass() / powf(pDiffAbs, 2.0);
             
             // force vector
             force = absForce*pDiffNorm * (isRepulsor ? -1.0 : 1.0);
