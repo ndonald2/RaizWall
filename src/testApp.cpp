@@ -14,11 +14,13 @@ void testApp::setup(){
     dot->position = ofGetWindowSize()/2.0f;
     physicsManager.addObject(dot);
     
-    dot = new DotPhysicsObject(20, ofColor(255,255,255));
-    dot->mass = 0.01;
-    dot->position = ofVec2f(300,20);
-    dot->velocity = ofVec2f(0,50);
-    physicsManager.addObject(dot);
+    for (int i=0; i<NUM_DOTS; i++){
+        DotPhysicsObject * dot = new DotPhysicsObject(20, ofColor(255,255,255));
+        dot->mass = 1000;
+        dot->position = ofVec2f(i*100 + 200,30);
+        dot->velocity = ofVec2f(0,400);
+        physicsManager.addObject(dot);
+    }
     
     timeScale = 1.0f;
     

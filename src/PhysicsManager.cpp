@@ -29,15 +29,19 @@ void PhysicsManager::update(float dTime)
     }
     
     // Step 2: Resolve Collisions
+    vector<PhysicsObject*>::const_iterator first = objects.begin() + 1;
+    vector<PhysicsObject*>::const_iterator last = objects.end();
     for (int i=0; i<objects.size(); i++)
     {
-        objects[i]->resolveCollisions(objects, dTime);
+        vector<PhysicsObject*> otherObjects(first,last);
+        objects[i]->resolveCollisions(otherObjects, dTime);
+        first++;
     }
     
     // Step 3: Update physics state
     // only need N-i objects for next operation
-    vector<PhysicsObject*>::const_iterator first = objects.begin() + 1;
-    vector<PhysicsObject*>::const_iterator last = objects.end();
+    first = objects.begin() + 1;
+    last = objects.end();
     for (int i=0; i<objects.size(); i++)
     {
         if (first != last){

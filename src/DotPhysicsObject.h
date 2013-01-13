@@ -17,19 +17,8 @@ public:
     
     DotPhysicsObject(float _radius, ofColor _color);
     
-    void resolveCollisions(vector<PhysicsObject*>  & otherObjects, float dTime);
     void draw();
     
-    inline float getRadius() { return radius; };
-    
-    void setRadius(float _radius);
-    void setColor(ofColor _color);
-    
-protected:
-    
-    float intersectionFactor(DotPhysicsObject * otherObject, float dTime);
-    
-    float   radius;
     ofColor color;
     
 };
