@@ -25,8 +25,7 @@ void testApp::setup(){
     
     for (int i=0; i<NUM_DOTS; i++){
         DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(10,20), ofColor(ofRandom(64,200)));
-        dot->setMass(200);
-        dot->setPosition(ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf()));
+        dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
     
@@ -38,7 +37,7 @@ void testApp::setup(){
 void testApp::update(){
     
     gravitron->setPosition(ofVec2f(mouseX,mouseY));
-    gravitron->setMass(ofGetMousePressed() ? 30000000 : 0);
+    gravitron->setMass(ofGetMousePressed() ? 1000000 : 0);
 
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }

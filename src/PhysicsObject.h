@@ -59,6 +59,7 @@ public:
     
     inline bool             getIsAnchored() { return isAnchored; };
     inline bool             getIsSolid() { return isSolid; };
+    inline float            getBoundingRadius() { return boundingRadius; };
     inline float            getMass() { return mass; };
     inline const ofVec2f  & getPosition() { return position; };
     inline const ofVec2f  & getLastPosition() { return lastPosition; };

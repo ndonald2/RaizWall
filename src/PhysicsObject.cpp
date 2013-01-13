@@ -14,7 +14,7 @@ PhysicsObject::PhysicsObject()
     isAnchored = false;
     isSolid = true;
     boundingRadius = 1.0f;
-    ambientFriction = 0.01f;
+    ambientFriction = 0.001f;
     mass = 10.0;
     velocity = ofVec2f();
     position = ofVec2f();
@@ -170,10 +170,6 @@ bool PhysicsObject::passedThrough(PhysicsObject *otherObject)
             ofVec2f projVec = projectionMag * pathVec;
             float distToObj = lastPosToObject.distance(projVec);
             pt = (distToObj <= boundingRadius + otherObject->boundingRadius);
-        }
-        
-        if (pt){
-            ofLog();
         }
     }
     
