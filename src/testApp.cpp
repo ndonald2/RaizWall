@@ -14,18 +14,19 @@ void testApp::setup(){
     gravitron->setIsSolid(false);
     gravitron->setIsAnchored(false);
     gravitron->setPosition(ofGetWindowSize()/2.0f);
+    gravitron->minDistanceThresh = 200;
     physicsManager.addObject(gravitron);
     
-    DotPhysicsObject *sun = new DotPhysicsObject(50, ofColor(255,33,190));
-    sun->setIsAnchored(true);
-    sun->setMass(3000000);
-    sun->setPosition(ofGetWindowSize()/2.0f);
-    physicsManager.addObject(sun);
+//    DotPhysicsObject *sun = new DotPhysicsObject(50, ofColor(255,33,190));
+//    sun->setIsAnchored(true);
+//    sun->setMass(3000000);
+//    sun->setPosition(ofGetWindowSize()/2.0f);
+//    physicsManager.addObject(sun);
     
     for (int i=0; i<NUM_DOTS; i++){
         DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(10,20), ofColor(ofRandom(64,200)));
-        dot->setMass(dot->getMass()*0.5);
-        dot->setPosition(ofVec2f(100,100) );// ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf()));
+        dot->setMass(200);
+        dot->setPosition(ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf()));
         physicsManager.addObject(dot);
     }
     
@@ -37,7 +38,7 @@ void testApp::setup(){
 void testApp::update(){
     
     gravitron->setPosition(ofVec2f(mouseX,mouseY));
-    gravitron->setMass(ofGetMousePressed() ? 300000 : 0);
+    gravitron->setMass(ofGetMousePressed() ? 30000000 : 0);
 
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }

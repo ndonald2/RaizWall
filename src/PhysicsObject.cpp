@@ -12,6 +12,7 @@
 PhysicsObject::PhysicsObject()
 {
     isAnchored = false;
+    isSolid = true;
     boundingRadius = 1.0f;
     ambientFriction = 0.01f;
     mass = 10.0;
@@ -161,16 +162,19 @@ bool PhysicsObject::passedThrough(PhysicsObject *otherObject)
     if (!isAnchored & isSolid && otherObject->isSolid){
         
         // project distance from last point to other object onto path unit vector
-        ofVec2f lastPosToObject = lastPosition - otherObject->getPosition();
-        ofVec2f pathVec = velocity.normalized();
-        float projectionMag = lastPosToObject.dot(pathVec);
-        if (projectionMag >= 0 && pathVec.length() > 0){
+        ofVec2f lastPosToObject = otherObject->getPosition() - lastPosition;
+        ofVec2f pathVec = position - lastPosition;
+        float projectionMag = lastPosToObject.dot(pathVec.normalized());
+        if (projectionMag > 0 && projectionMag < pathVec.length() &&  pathVec.length() > 0){
             
             ofVec2f projVec = projectionMag * pathVec;
             float distToObj = lastPosToObject.distance(projVec);
-            pt = (distToObj >= boundingRadius + otherObject->boundingRadius);
+            pt = (distToObj <= boundingRadius + otherObject->boundingRadius);
         }
         
+        if (pt){
+            ofLog();
+        }
     }
     
     return pt;
@@ -196,9 +200,7 @@ float PhysicsObject::deltaTimeSinceIntersection(PhysicsObject *otherObject, floa
         sqrtOp = sqrtf(sqrtOp);
         float s1 = (-B + sqrtOp)/(2*A);
         float s2 = (-B - sqrtOp)/(2*A);
-        
-        printf("Solutions: %.2f and %.2f\n", s1, s2);
-        
+                
         float ans = MIN(s1,s2);
         return (ans >= 0.0 && ans <= dTime) ? ans : 0.0f;
     }
