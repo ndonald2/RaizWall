@@ -11,7 +11,8 @@
 DotPhysicsObject::DotPhysicsObject(float _radius, ofColor _color)
 {
     boundingRadius = _radius;
-    mass = (4.0/3.0)*M_PI*powf(_radius,3.0); // like a sphere (default)
+    mass = _radius*_radius;
+    minDistanceThresh = _radius;
     color = _color;
 }
 

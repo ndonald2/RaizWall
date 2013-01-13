@@ -8,12 +8,13 @@
 
 #include "GravitationalPhysicsObject.h"
 
-#define kPOMinObjectDistance          2.0
 #define kPOGravitationalConstant      100.0
 
 GravitationalPhysicsObject::GravitationalPhysicsObject()
 {
     isRepulsor = false;
+    boundingRadius = 0;
+    minDistanceThresh = 20;
 }
 
 ofVec2f GravitationalPhysicsObject::forceAppliedTo(PhysicsObject *otherObject, float dTime)
@@ -24,14 +25,9 @@ ofVec2f GravitationalPhysicsObject::forceAppliedTo(PhysicsObject *otherObject, f
     
     if (!otherObject->isAnchored){
     
-        // jitter if we need to to avoid locking
-        if ((position - otherObject->position).length() < kPOMinObjectDistance){
-            position += ofVec2f(ofRandom(1,2), ofRandom(1,2));
-        }
-        
         ofVec2f pDiff       = position - otherObject->position;
         ofVec2f pDiffNorm   = pDiff.normalized();
-        float   pDiffAbs    = MAX(pDiff.length(), kPOMinObjectDistance);
+        float   pDiffAbs    = MAX(pDiff.length(), minDistanceThresh);
         
         // too far away to care?
         if (pDiffAbs <= maxDistance){

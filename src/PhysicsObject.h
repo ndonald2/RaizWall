@@ -44,10 +44,9 @@ public:
     
     float   mass;
     float   ambientFriction;
+    
     ofVec2f position;
     ofVec2f velocity;
-
-    
     
 };
 

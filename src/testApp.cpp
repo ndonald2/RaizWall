@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-#define NUM_DOTS    2
+#define NUM_DOTS    10
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -9,16 +9,22 @@ void testApp::setup(){
     ofSetCircleResolution(32);
     
     // add objects to physics manager
-    DotPhysicsObject *dot = new DotPhysicsObject(90, ofColor(180,200,0));
-    dot->isAnchored = true;
-    dot->position = ofGetWindowSize()/2.0f;
-    physicsManager.addObject(dot);
+    gravitron = new GravitationalPhysicsObject();
+    gravitron->mass = 0;
+    gravitron->isAnchored = true;
+    gravitron->position = ofGetWindowSize()/2.0f;
+    physicsManager.addObject(gravitron);
+    
+    DotPhysicsObject *sun = new DotPhysicsObject(50, ofColor(255,33,190));
+    sun->isAnchored = true;
+    sun->mass = 300000;
+    sun->position = ofGetWindowSize()/2.0f;
+    physicsManager.addObject(sun);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(20, ofColor(255,255,255));
-        dot->mass = 1000;
-        dot->position = ofVec2f(i*100 + 200,30);
-        dot->velocity = ofVec2f(0,400);
+        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(25,30), ofColor(ofRandom(64,200)));
+        dot->mass = 0.5*dot->boundingRadius;
+        dot->position = ofVec2f(ofGetWidth()*ofRandomf(), ofGetHeight()*ofRandomf());
         physicsManager.addObject(dot);
     }
     
@@ -28,6 +34,10 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    gravitron->position = ofVec2f(mouseX,mouseY);
+    gravitron->mass = ofGetMousePressed() ? 300000 : 0;
+
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }
 
@@ -60,7 +70,6 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y){
-
 }
 
 //--------------------------------------------------------------
@@ -70,12 +79,10 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
 }
 
 //--------------------------------------------------------------

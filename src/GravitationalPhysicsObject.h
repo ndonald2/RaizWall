@@ -17,10 +17,16 @@ public:
     
     GravitationalPhysicsObject();
     
+    // no drawing by default
+    virtual void draw() {};
+    
     // Force applied by other object
     virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime);
     
-    inline void setIsRepulsor(bool repulsor) { isRepulsor = true; };
+    inline void setIsRepulsor(bool repulsor) { isRepulsor = repulsor; };
+    
+    // so forces don't become ridiculously large
+    float minDistanceThresh;
     
 protected:
     

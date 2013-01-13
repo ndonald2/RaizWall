@@ -12,7 +12,7 @@ PhysicsObject::PhysicsObject()
 {
     isAnchored = false;
     boundingRadius = 1.0f;
-    ambientFriction = 0.001f;
+    ambientFriction = 0.01f;
     mass = 10.0;
     velocity = ofVec2f();
     position = ofVec2f();
@@ -25,8 +25,31 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
         PhysicsObject *otherObject = otherObjects[i];
         
         // handle collision
+        // A-posteriori collision detection
         if (intersecting(otherObject)){
+            
             collide(otherObject, dTime);
+            
+            // if still intersecting, split the difference
+            if (intersecting(otherObject))
+            {
+                ofVec2f difference = otherObject->position - position;
+                if (difference.length() == 0) difference = ofVec2f(1,0);
+                float overlap = (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position));
+                
+                difference.normalize();
+                
+                if (isAnchored){
+                    otherObject->position += overlap * difference;
+                }
+                else if (otherObject->isAnchored){
+                    position -= overlap * difference;
+                }
+                else{
+                    position -= overlap * (difference/2.0f);
+                    otherObject->position += overlap * (difference/2.0f);
+                }
+            }
         }
         else {
             
@@ -69,6 +92,7 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
 
 void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
 {
+    
     // Assume perfectly elastic collisions
     // http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
     
@@ -86,6 +110,7 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
         // back other object one interpolated step
         otherObject->position -= otherObject->velocity * dTime * (1.0 -fInterp);
     }
+    
     
     ofVec2f collisionVect = (position - otherObject->position);
     collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
@@ -121,8 +146,10 @@ void PhysicsObject::move(float dTime)
 
 bool PhysicsObject::intersecting(PhysicsObject *otherObject)
 {
-    float overlap = (position.distance(otherObject->position) - boundingRadius - otherObject->boundingRadius);
-    return overlap <= 0;
+    if (otherObject->boundingRadius == 0 || boundingRadius == 0) return false;
+    
+    float overlap = (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position));
+    return overlap >= 0;
 }
 
 
@@ -150,8 +177,8 @@ float PhysicsObject::intersectionFactor(PhysicsObject *otherObject, float dTime)
         float s1 = (-B + sqrtOp)/(2*A);
         float s2 = (-B - sqrtOp)/(2*A);
         
-        float ans = s1 <= dTime ? s1 : (s2 <= dTime ? s2 : 0);
-        return ans/dTime;
+        float ans = MIN(s1,s2);
+        return CLAMP(ans/dTime, 0, 1);
     }
     else{
         return 0;
