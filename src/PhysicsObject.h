@@ -17,14 +17,14 @@ public:
     
     PhysicsObject();
     
-    // Update force/accel/velocity
+    // Update force/accel/velocity and handle collisions
     void update(vector<PhysicsObject*> & otherObjects, float dTime);
+    
+    // Collide with other objects
+    void collide(PhysicsObject * otherObject, float dTime);
     
     // Update position
     virtual void move(float dTime);
-    
-    // Collide with other objects (and walls)
-    virtual void resolveCollisions(vector<PhysicsObject*> & otherObjects, float dTime);
     
     // Force applied to other object
     virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime) { return ofVec2f(); };

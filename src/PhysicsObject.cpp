@@ -18,57 +18,31 @@ PhysicsObject::PhysicsObject()
     position = ofVec2f();
 }
 
-void PhysicsObject::resolveCollisions(vector<PhysicsObject*> & otherObjects, float dTime)
-{
-    // Assume perfectly elastic collisions
-    // http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
-            
+void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
+{    
     for (int i=0; i<otherObjects.size(); i++){
         
-        PhysicsObject* otherObject = otherObjects[i];
-        if (otherObject == this) continue;
+        PhysicsObject *otherObject = otherObjects[i];
         
-        ofVec2f uvVelocity = velocity.normalized();
-        
-        if (intersecting(otherObject))
-        {
-            
-            // get interpolation (how far along were we in the frame when we collided)
-            float fInterp = intersectionFactor(otherObject, dTime);
-            
-            if (!isAnchored){
-                // back up one interpolated step for tangential collision
-                position -= velocity * dTime * (1.0f -fInterp);
-            }
-            
-            if (!otherObject->isAnchored){
-                // back other object one interpolated step
-                otherObject->position -= otherObject->velocity * dTime * (1.0 -fInterp);
-            }
-            
-            ofVec2f collisionVect = (position - otherObject->position);
-            collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
-            
-            // get components perpendicular to tangent
-            float pt1i = velocity.dot(collisionVect);
-            float pt2i = otherObject->velocity.dot(collisionVect);
-            
-            if (isAnchored){
-                otherObject->velocity += -2*pt2i*collisionVect;
-            }
-            else if (otherObject->isAnchored){
-                velocity = -2*pt1i*collisionVect;
-            }
-            else{
-                float pt1f = ((pt1i * (mass - otherObject->mass)) + (2 * otherObject->mass * pt2i))/(mass + otherObject->mass);
-                float pt2f = -pt1f*mass/otherObject->mass;
-                
-                velocity += (pt1f - pt1i)*collisionVect;
-                otherObject->velocity += (pt2f - pt2i)*collisionVect;
-            }
-            
-            
+        // handle collision
+        if (intersecting(otherObject)){
+            collide(otherObject, dTime);
         }
+        else {
+            
+            // Step 1: Calculate forces
+            ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
+            ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
+            
+            // Step 2: update my state
+            ofVec2f acceleration = forceToMe/mass;
+            velocity += acceleration*dTime;
+            
+            // Step 3: update other state
+            ofVec2f otherAcceleration = forceToOther/otherObject->mass;
+            otherObject->velocity += otherAcceleration*dTime;
+        }
+
     }
     
     // Collide against walls
@@ -93,24 +67,47 @@ void PhysicsObject::resolveCollisions(vector<PhysicsObject*> & otherObjects, flo
 }
 
 
-void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
-{    
-    for (int i=0; i<otherObjects.size(); i++){
-        
-        PhysicsObject *otherObject = otherObjects[i];
-        
-        // Step 1: Calculate forces
-        ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
-        ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
-        
-        // Step 2: update my state
-        ofVec2f acceleration = forceToMe/mass;
-        velocity += acceleration*dTime;
-        
-        // Step 3: update other state
-        ofVec2f otherAcceleration = forceToOther/otherObject->mass;
-        otherObject->velocity += otherAcceleration*dTime; 
+void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
+{
+    // Assume perfectly elastic collisions
+    // http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
+    
+    ofVec2f uvVelocity = velocity.normalized();
+    
+    // get interpolation (how far along were we in the frame when we collided)
+    float fInterp = intersectionFactor(otherObject, dTime);
+    
+    if (!isAnchored){
+        // back up one interpolated step for tangential collision
+        position -= velocity * dTime * (1.0f -fInterp);
     }
+    
+    if (!otherObject->isAnchored){
+        // back other object one interpolated step
+        otherObject->position -= otherObject->velocity * dTime * (1.0 -fInterp);
+    }
+    
+    ofVec2f collisionVect = (position - otherObject->position);
+    collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
+    
+    // get components perpendicular to tangent
+    float pt1i = velocity.dot(collisionVect);
+    float pt2i = otherObject->velocity.dot(collisionVect);
+    
+    if (isAnchored){
+        otherObject->velocity += -2*pt2i*collisionVect;
+    }
+    else if (otherObject->isAnchored){
+        velocity = -2*pt1i*collisionVect;
+    }
+    else{
+        float pt1f = ((pt1i * (mass - otherObject->mass)) + (2 * otherObject->mass * pt2i))/(mass + otherObject->mass);
+        float pt2f = -pt1f*mass/otherObject->mass;
+        
+        velocity += (pt1f - pt1i)*collisionVect;
+        otherObject->velocity += (pt2f - pt2i)*collisionVect;
+    }
+    
 }
 
 void PhysicsObject::move(float dTime)
