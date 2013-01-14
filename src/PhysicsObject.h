@@ -75,6 +75,8 @@ protected:
     float   ambientFriction;
     
     float   boundingRadius;
+    
+    ofVec2f force;
     ofVec2f position;
     ofVec2f lastPosition;
     ofVec2f velocity;

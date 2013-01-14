@@ -14,11 +14,8 @@ PhysicsObject::PhysicsObject()
     isAnchored = false;
     isSolid = true;
     boundingRadius = 1.0f;
-    ambientFriction = 0.001f;
+    ambientFriction = 0.2f;
     mass = 10.0;
-    velocity = ofVec2f();
-    position = ofVec2f();
-    lastPosition = ofVec2f();
 }
 
 void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
@@ -56,17 +53,12 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
         }
         else {
             
-            // Step 1: Calculate forces
+            // Calculate and update forces
             ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
             ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
             
-            // Step 2: update my state
-            ofVec2f acceleration = forceToMe/mass;
-            velocity += acceleration*dTime;
-            
-            // Step 3: update other state
-            ofVec2f otherAcceleration = forceToOther/otherObject->mass;
-            otherObject->velocity += otherAcceleration*dTime;
+            force += forceToMe;
+            otherObject->force += forceToOther;
         }
 
     }
@@ -121,11 +113,11 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
     float pt1i = velocity.dot(collisionVect);
     float pt2i = otherObject->velocity.dot(collisionVect);
     
-    if (isAnchored){
+    if (isAnchored && !otherObject->isAnchored){
         otherObject->velocity += -2*pt2i*collisionVect;
     }
-    else if (otherObject->isAnchored){
-        velocity = -2*pt1i*collisionVect;
+    else if (!isAnchored && otherObject->isAnchored){
+        velocity += -2*pt1i*collisionVect;
     }
     else{
         float pt1f = ((pt1i * (mass - otherObject->mass)) + (2 * otherObject->mass * pt2i))/(mass + otherObject->mass);
@@ -141,9 +133,19 @@ void PhysicsObject::move(float dTime)
 {
     // Update position
     if (!isAnchored){
-        velocity *= (1.0f - ambientFriction);
+        
+        // apply friction (% loss per second)
+        velocity *= powf(1.0f - ambientFriction, dTime);
+        
+        // calculate accel based on force
+        ofVec2f acceleration = mass > 0 ? force/mass : ofVec2f::zero();
+        velocity += acceleration*dTime;
+
         lastPosition = position;
         position += velocity*dTime;
+        
+        // reset force
+        force = ofVec2f();
     }    
 }
 

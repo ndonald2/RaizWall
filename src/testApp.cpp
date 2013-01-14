@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-#define NUM_DOTS    20
+#define NUM_DOTS    10
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -24,7 +24,7 @@ void testApp::setup(){
 //    physicsManager.addObject(sun);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(10,20), ofColor(ofRandom(64,200)));
+        DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 10, ofColor(ofRandom(64,200)));
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
@@ -35,10 +35,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-    
     gravitron->setPosition(ofVec2f(mouseX,mouseY));
-    gravitron->setMass(ofGetMousePressed() ? 1000000 : 0);
-
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }
 
@@ -80,10 +77,12 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    gravitron->setMass( 1000000 );
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
+    gravitron->setMass( 0 );
 }
 
 //--------------------------------------------------------------
