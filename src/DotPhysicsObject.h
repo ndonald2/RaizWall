@@ -11,7 +11,7 @@
 
 #include "GravitationalPhysicsObject.h"
 
-class DotPhysicsObject : public GravitationalPhysicsObject {
+class DotPhysicsObject : public PhysicsObject {
     
 public:
     

@@ -20,6 +20,7 @@
 		019B552515559E1C00319062 /* ofxWindowApp.xib in Sources */ = {isa = PBXBuildFile; fileRef = 019B552315559DDC00319062 /* ofxWindowApp.xib */; };
 		019B552615559ECD00319062 /* ofxWindowAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019B551C1555941400319062 /* ofxWindowAppDelegate.mm */; };
 		019B55291555A0CB00319062 /* SetupWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019B55281555A0CB00319062 /* SetupWindowController.mm */; };
+		9A40878D16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */; };
 		9A642CAE16A0810000A7F137 /* PhysicsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */; };
 		9A642CB116A0811700A7F137 /* PhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */; };
 		9A642CB516A0830800A7F137 /* DotPhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CB316A0830800A7F137 /* DotPhysicsObject.cpp */; };
@@ -95,6 +96,8 @@
 		019B552315559DDC00319062 /* ofxWindowApp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ofxWindowApp.xib; sourceTree = "<group>"; };
 		019B55271555A0CB00319062 /* SetupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupWindowController.h; sourceTree = "<group>"; };
 		019B55281555A0CB00319062 /* SetupWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SetupWindowController.mm; sourceTree = "<group>"; };
+		9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageBlobPhysicsObject.cpp; sourceTree = "<group>"; };
+		9A40878C16A4BAA800D8DAFB /* ImageBlobPhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageBlobPhysicsObject.h; sourceTree = "<group>"; };
 		9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsManager.cpp; sourceTree = "<group>"; };
 		9A642CAD16A0810000A7F137 /* PhysicsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsManager.h; sourceTree = "<group>"; };
 		9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsObject.cpp; sourceTree = "<group>"; };
@@ -214,6 +217,8 @@
 				9A642CB616A0B34000A7F137 /* GravitationalPhysicsObject.cpp */,
 				9A642CB416A0830800A7F137 /* DotPhysicsObject.h */,
 				9A642CB316A0830800A7F137 /* DotPhysicsObject.cpp */,
+				9A40878C16A4BAA800D8DAFB /* ImageBlobPhysicsObject.h */,
+				9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */,
 				F205992416A32FFF00730218 /* PhysicsUtils.h */,
 				F205992316A32FFF00730218 /* PhysicsUtils.cpp */,
 			);
@@ -395,6 +400,7 @@
 				9A642CB516A0830800A7F137 /* DotPhysicsObject.cpp in Sources */,
 				9A642CB816A0B34100A7F137 /* GravitationalPhysicsObject.cpp in Sources */,
 				F205992516A32FFF00730218 /* PhysicsUtils.cpp in Sources */,
+				9A40878D16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

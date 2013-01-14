@@ -1,12 +1,16 @@
 #include "testApp.h"
 
-#define NUM_DOTS    10
+#include "DotPhysicsObject.h"
+#include "ImageBlobPhysicsObject.h"
+
+#define NUM_DOTS    5
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
     ofBackground(0, 0, 0);
     ofSetCircleResolution(32);
+    ofEnableAlphaBlending();
     
     // add objects to physics manager
     gravitron = new GravitationalPhysicsObject();
@@ -18,10 +22,22 @@ void testApp::setup(){
     physicsManager.addObject(gravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 10, ofColor(ofRandom(64,200)));
+        DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 20, ofColor(ofRandom(64,200)));
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
+    
+    ImageBlobPhysicsObject *imageBlob = new ImageBlobPhysicsObject("images/pubget.png", 50);
+    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    physicsManager.addObject(imageBlob);
+    
+    imageBlob = new ImageBlobPhysicsObject("images/macys.png", 50);
+    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    physicsManager.addObject(imageBlob);
+    
+    imageBlob = new ImageBlobPhysicsObject("images/bloomies.png", 50);
+    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    physicsManager.addObject(imageBlob);
     
     timeScale = 1.0f;
     

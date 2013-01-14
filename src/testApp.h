@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "PhysicsManager.h"
-#include "DotPhysicsObject.h"
+#include "GravitationalPhysicsObject.h"
 
 class testApp : public ofBaseApp{
     
