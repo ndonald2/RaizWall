@@ -14,7 +14,7 @@ void testApp::setup(){
     gravitron->setIsSolid(false);
     gravitron->setIsAnchored(false);
     gravitron->setPosition(ofGetWindowSize()/2.0f);
-    gravitron->minDistanceThresh = 200;
+    gravitron->setMinDistanceThresh(200);
     physicsManager.addObject(gravitron);
     
     for (int i=0; i<NUM_DOTS; i++){

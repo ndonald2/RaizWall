@@ -19,6 +19,11 @@ public:
     
     void draw();
     
+    inline void setColor(const ofColor & newColor) { color = newColor; };
+    inline const ofColor & getColor() { return color; };
+    
+protected:
+    
     ofColor color;
     
 };

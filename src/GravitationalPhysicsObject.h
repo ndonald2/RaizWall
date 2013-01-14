@@ -17,21 +17,21 @@ public:
     
     GravitationalPhysicsObject();
     
-    // no drawing by default
-    virtual void draw() {};
-    
     // Force applied by other object
     virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime);
     
     inline void setIsRepulsor(bool repulsor) { isRepulsor = repulsor; };
+    inline bool getIsRepulsor() { return isRepulsor; };
     
     // so forces don't become ridiculously large
-    float minDistanceThresh;
-    
+    inline void setMinDistanceThresh( float newMinDist ) { minDistanceThresh = MAX(1.0f, newMinDist); };
+    inline float getMinDistanceThresh() { return minDistanceThresh; };
     
 protected:
     
     bool isRepulsor;
+    float minDistanceThresh;
+
 };
 
 #endif /* defined(__raizWall__GravitationalPhysicsObject__) */

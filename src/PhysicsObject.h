@@ -50,9 +50,9 @@ public:
     
     virtual void setMass(float newMass);
     
-    virtual void setPosition(ofVec2f newPosition);
+    virtual void setPosition(const ofVec2f & newPosition);
     
-    virtual void setVelocity(ofVec2f newVelocity);
+    virtual void setVelocity(const ofVec2f & newVelocity);
     
     
     //---------- Getters -------------

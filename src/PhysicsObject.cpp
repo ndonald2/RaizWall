@@ -231,13 +231,13 @@ void PhysicsObject::setMass(float newMass)
     mass = MAX(0, newMass);
 }
 
-void PhysicsObject::setPosition(ofVec2f newPosition)
+void PhysicsObject::setPosition(const ofVec2f & newPosition)
 {
     position = newPosition;
     lastPosition = newPosition;
 }
 
-void PhysicsObject::setVelocity(ofVec2f newVelocity)
+void PhysicsObject::setVelocity(const ofVec2f & newVelocity)
 {
     if (!isAnchored){
         velocity = newVelocity;
