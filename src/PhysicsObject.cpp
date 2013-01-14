@@ -51,15 +51,13 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
                 }
             }
         }
-        else {
             
-            // Calculate and update forces
-            ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
-            ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
-            
-            force += forceToMe;
-            otherObject->force += forceToOther;
-        }
+        // Calculate and update forces
+        ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
+        ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
+        
+        force += forceToMe;
+        otherObject->force += forceToOther;
 
     }
     
@@ -160,7 +158,7 @@ void PhysicsObject::move(float dTime)
 bool PhysicsObject::intersecting(PhysicsObject *otherObject)
 {
     if (otherObject->boundingRadius == 0 || boundingRadius == 0) return false;
-    return (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position)) >= 0;
+    return (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position)) > 0;
 }
 
 bool PhysicsObject::passedThrough(PhysicsObject *otherObject)

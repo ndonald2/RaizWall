@@ -17,12 +17,6 @@ void testApp::setup(){
     gravitron->minDistanceThresh = 200;
     physicsManager.addObject(gravitron);
     
-//    DotPhysicsObject *sun = new DotPhysicsObject(50, ofColor(255,33,190));
-//    sun->setIsAnchored(true);
-//    sun->setMass(3000000);
-//    sun->setPosition(ofGetWindowSize()/2.0f);
-//    physicsManager.addObject(sun);
-    
     for (int i=0; i<NUM_DOTS; i++){
         DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 10, ofColor(ofRandom(64,200)));
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
@@ -77,7 +71,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    gravitron->setMass( 1000000 );
+    gravitron->setMass( 1e6 );
 }
 
 //--------------------------------------------------------------
