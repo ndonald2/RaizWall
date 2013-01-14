@@ -64,6 +64,7 @@ public:
     inline const ofVec2f  & getPosition() { return position; };
     inline const ofVec2f  & getLastPosition() { return lastPosition; };
     inline const ofVec2f  & getVelocity() { return velocity; };
+    inline const ofVec2f  & getLastVelocity() { return lastVelocity; };
     
     
 protected:
@@ -80,6 +81,7 @@ protected:
     ofVec2f position;
     ofVec2f lastPosition;
     ofVec2f velocity;
+    ofVec2f lastVelocity;
     
 };
 

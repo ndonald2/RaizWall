@@ -14,7 +14,7 @@ PhysicsObject::PhysicsObject()
     isAnchored = false;
     isSolid = true;
     boundingRadius = 1.0f;
-    ambientFriction = 0.2f;
+    ambientFriction = 0.15f;
     mass = 10.0;
 }
 
@@ -94,20 +94,27 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
     ofVec2f uvVelocity = velocity.normalized();
     
     // get interpolation (how far along were we in the frame when we collided)
-    float dTimeOfCollision = deltaTimeSinceIntersection(otherObject, dTime);
+    float timeRatioOfCollision = deltaTimeSinceIntersection(otherObject, dTime)/dTime;
     
     if (!isAnchored){
         // back up one interpolated step for tangential collision
-        position = lastPosition + velocity*dTimeOfCollision;
+        position = lastPosition.getInterpolated(position, timeRatioOfCollision);
+        velocity = lastVelocity.getInterpolated(velocity, timeRatioOfCollision);
     }
     
     if (!otherObject->isAnchored){
         // back other object one interpolated step
-        otherObject->position = otherObject->lastPosition + otherObject->velocity*dTimeOfCollision;
+        otherObject->position = otherObject->lastPosition.getInterpolated(otherObject->position, timeRatioOfCollision);
+        otherObject->velocity = otherObject->lastVelocity.getInterpolated(otherObject->velocity, timeRatioOfCollision);
     }
     
     ofVec2f collisionVect = (position - otherObject->position);
     collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
+    
+    // lossy collision
+    // TODO: Make this a parameter
+//    velocity *= 0.9;
+//    otherObject->velocity *= 0.9;
     
     // get components perpendicular to tangent
     float pt1i = velocity.dot(collisionVect);
@@ -139,6 +146,7 @@ void PhysicsObject::move(float dTime)
         
         // calculate accel based on force
         ofVec2f acceleration = mass > 0 ? force/mass : ofVec2f::zero();
+        lastVelocity = velocity;
         velocity += acceleration*dTime;
 
         lastPosition = position;
@@ -235,5 +243,6 @@ void PhysicsObject::setVelocity(ofVec2f newVelocity)
 {
     if (!isAnchored){
         velocity = newVelocity;
+        lastVelocity = velocity;
     }
 }
