@@ -18,10 +18,10 @@ public:
     PhysicsObject();
     
     // Update force/accel/velocity and handle collisions
-    void update(vector<PhysicsObject*> & otherObjects, float dTime);
+    virtual void update(vector<PhysicsObject*> & otherObjects, float dTime);
     
     // Collide with other objects
-    void collide(PhysicsObject * otherObject, float dTime);
+    virtual void collide(PhysicsObject * otherObject, float dTime);
     
     // Update position
     virtual void move(float dTime);
@@ -39,7 +39,7 @@ public:
     virtual float deltaTimeSinceIntersection(PhysicsObject * otherObject, float dTime);
     
     // Draw
-    virtual void draw() = 0;
+    virtual void draw() {};
     
     
     //--------- Setters ------------

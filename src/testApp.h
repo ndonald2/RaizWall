@@ -23,8 +23,8 @@ class testApp : public ofBaseApp{
     
     private:
     
-        PhysicsManager                 physicsManager;
-        GravitationalPhysicsObject    *gravitron;
+        PhysicsManager                  physicsManager;
+        GravitationalPhysicsObject      *gravitron;
     
-        float               timeScale;
+        float                           timeScale;
 };

@@ -217,8 +217,8 @@ float PhysicsObject::deltaTimeSinceIntersection(PhysicsObject *otherObject, floa
 
 void PhysicsObject::setIsAnchored(bool _isAnchored)
 {
-    isAnchored = _isAnchored;
     setVelocity(ofVec2f());
+    isAnchored = _isAnchored;
 }
 
 void PhysicsObject::setIsSolid(bool _isSolid)
