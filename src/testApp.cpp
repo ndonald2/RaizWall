@@ -94,6 +94,16 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
     switch (key) {
             
+        case OF_KEY_UP:
+            kinectTiltAngle = ofClamp(kinectTiltAngle + 5, -30, 30);
+            kinectHardwareDriver.setTiltAngle(kinectTiltAngle);
+            break;
+            
+        case OF_KEY_DOWN:
+            kinectTiltAngle = ofClamp(kinectTiltAngle - 5, -30, 30);
+            kinectHardwareDriver.setTiltAngle(kinectTiltAngle);
+            break;
+            
         case OF_KEY_LEFT:
             timeScale *= 0.5f;
             break;
