@@ -30,7 +30,7 @@ class HandManager {
     
         void handEvent(ofxOpenNIHandEvent & event);
     
-        void updatePosition(GravitationalPhysicsObject * gravitron, ofPoint openNIPosition);
+        void updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition);
 };
 
 #endif /* defined(__raizWall__HandManager__) */

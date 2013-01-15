@@ -3,7 +3,7 @@
 #include "DotPhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
-#define NUM_DOTS    5
+#define NUM_DOTS    20
 #define MOUSE_RIGHT 2
 
 //--------------------------------------------------------------
@@ -26,21 +26,24 @@ void testApp::setup(){
     physicsManager.addObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 20, ofColor(ofRandom(64,200)));
+        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(10, 20), ofColor(ofRandom(64,200)));
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
     
     ImageBlobPhysicsObject *imageBlob = new ImageBlobPhysicsObject("images/pubget.png", 50);
     imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    imageBlob->setMass(1.0);
     physicsManager.addObject(imageBlob);
     
     imageBlob = new ImageBlobPhysicsObject("images/macys.png", 50);
     imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    imageBlob->setMass(1.0);
     physicsManager.addObject(imageBlob);
     
     imageBlob = new ImageBlobPhysicsObject("images/bloomies.png", 50);
     imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+    imageBlob->setMass(1.0);
     physicsManager.addObject(imageBlob);
     
     timeScale = 1.0f;
@@ -48,6 +51,12 @@ void testApp::setup(){
 }
 
 void testApp::setupOpenNI() {
+    
+    // Setup kinect hardware (for angle)
+    kinectHardwareDriver.setup();
+    kinectHardwareDriver.setTiltAngle(0);
+    
+    // Setup OpenNI
     openNIDevice.setup();
     openNIDevice.addImageGenerator();
     openNIDevice.addDepthGenerator();
@@ -62,6 +71,7 @@ void testApp::setupOpenNI() {
     openNIDevice.getHandsGenerator().SetSmoothing(0.2);
     
     openNIDevice.start();
+    
     handManager.setup(&openNIDevice, &physicsManager);
 }
 
@@ -84,11 +94,11 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
     switch (key) {
             
-        case OF_KEY_DOWN:
+        case OF_KEY_LEFT:
             timeScale *= 0.5f;
             break;
             
-        case OF_KEY_UP:
+        case OF_KEY_RIGHT:
             timeScale *= 2.0f;
             break;
             

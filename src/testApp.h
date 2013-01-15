@@ -5,6 +5,7 @@
 #include "GravitationalPhysicsObject.h"
 #include "DotPhysicsObject.h"
 #include "ofxOpenNI.h"
+#include "ofxHardwareDriver.h"
 #include "HandManager.h"
 #include <map.h>
 
@@ -26,13 +27,16 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     private:
+    
         PhysicsManager                  physicsManager;
         GravitationalPhysicsObject      *mouseGravitron;
         HandManager                     handManager;
     
         float                           timeScale;
     
-        ofxOpenNI openNIDevice;
+        ofxOpenNI                       openNIDevice;
+        ofxHardwareDriver               kinectHardwareDriver;
+        int                             kinectTiltAngle;
 
-        void setupOpenNI();
+        void                            setupOpenNI();
 };

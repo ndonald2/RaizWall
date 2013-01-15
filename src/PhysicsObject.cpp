@@ -14,7 +14,7 @@ PhysicsObject::PhysicsObject()
     isAnchored = false;
     isSolid = true;
     boundingRadius = 1.0f;
-    ambientFriction = 0.15f;
+    ambientFriction = 0.2f;
     mass = 10.0;
 }
 

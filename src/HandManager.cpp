@@ -22,6 +22,9 @@ void HandManager::setup(ofxOpenNI * openNIDevice, PhysicsManager * manager) {
 }
 
 void HandManager::update() {
+    
+    physicsManager->lock();
+    
     map<XnUserID, GravitationalPhysicsObject*>::iterator it;
     int numHands = openNIDevice->getNumTrackedHands();
     for (it = handGravitrons.begin(); it != handGravitrons.end(); ++it) {
@@ -29,20 +32,23 @@ void HandManager::update() {
             ofxOpenNIHand & hand = openNIDevice->getTrackedHand(i);
             if (hand.getID() == it->first) {
                 GravitationalPhysicsObject * gravitron = it->second;
-                updatePosition(gravitron, hand.getPosition());
-                
-                ofPoint position = hand.getPosition();
+                ofPoint & position = hand.getPosition();
+                updatePosition(gravitron, position);
 #if HAND_LOGGING
                 ofLogNotice() << "Updating Hand " << ofToString(hand.getID()) << ", " << ofToString(gravitron->getMass());
 #endif
             }
         }
     }
+    
+    physicsManager->unlock();
 }
 
 void HandManager::draw() {
     ofPushMatrix();
     ofSetColor(255, 0, 0);
+    
+    physicsManager->lock();
     
     map<XnUserID, GravitationalPhysicsObject*>::iterator it;
     for (it = handGravitrons.begin(); it != handGravitrons.end(); ++it) {
@@ -51,6 +57,8 @@ void HandManager::draw() {
         ofCircle(position.x, position.y, 10);
     }
     ofPopMatrix();
+    
+    physicsManager->unlock();
 }
 
 
@@ -96,12 +104,12 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
     physicsManager->unlock();
 }
 
-void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, ofPoint openNIPosition) {
+void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition) {
     int x = (openNIPosition.x / openNIDevice->getWidth()) * ofGetWidth();
     int y = (openNIPosition.y / openNIDevice->getHeight()) * ofGetHeight();
     float depth = ofNormalize(openNIPosition.z, MIN_DEPTH, MAX_DEPTH);
     depth = ofClamp(depth, 0, 1);
-    float strength = ofLerp(MIN_STRENGTH, MAX_STRENGTH, depth);
+    float strength = ofLerp(MAX_STRENGTH, MIN_STRENGTH, depth);
     gravitron->setMass(strength);
     gravitron->setPosition(ofVec2f(x, y));
 }

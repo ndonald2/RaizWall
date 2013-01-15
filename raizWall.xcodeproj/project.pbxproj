@@ -668,8 +668,8 @@
 		C8C844D416A4A92900BCFACA /* src */ = {
 			isa = PBXGroup;
 			children = (
-				C8C844D516A4A92900BCFACA /* ofxHardwareDriver.cpp */,
 				C8C844D616A4A92900BCFACA /* ofxHardwareDriver.h */,
+				C8C844D516A4A92900BCFACA /* ofxHardwareDriver.cpp */,
 				C8C844D716A4A92900BCFACA /* ofxOpenNI.cpp */,
 				C8C844D816A4A92900BCFACA /* ofxOpenNI.h */,
 				C8C844D916A4A92900BCFACA /* ofxOpenNITypes.cpp */,
