@@ -10,11 +10,14 @@
 
 void PhysicsManager::addObject(PhysicsObject *object)
 {
+    mutex.lock();
     objects.push_back(object);
+    mutex.unlock();
 }
 
 void PhysicsManager::removeObject(PhysicsObject *object)
 {
+    mutex.lock();
     vector<PhysicsObject*>::iterator it = objects.begin();
     while (it++ != objects.end()){
         if (*it == object){
@@ -22,11 +25,13 @@ void PhysicsManager::removeObject(PhysicsObject *object)
             break;
         }
     }
+    mutex.unlock();
 }
 
 void PhysicsManager::update(float dTime)
 {
-
+    mutex.lock();
+    
     // Step 1: Move
     for (int i=0; i<objects.size(); i++)
     {
@@ -45,12 +50,28 @@ void PhysicsManager::update(float dTime)
     }
     
     // Step 3 - draw (separate call)
+    
+    mutex.unlock();
 }
 
 void PhysicsManager::draw()
 {
+    mutex.lock();
     for (int i=0; i<objects.size(); i++)
     {
         objects[i]->draw();
     }
+    mutex.unlock();
+}
+
+// Public Lock/Unlock
+
+void PhysicsManager::lock()
+{
+    mutex.lock();
+}
+
+void PhysicsManager::unlock()
+{
+    mutex.unlock();
 }

@@ -22,10 +22,15 @@ public:
     void update(float dTime);
     void draw();
     
+    // Other processes attempting to add/remove/modify objects from another thread
+    // should invoke the lock to ensure synchronization
+    void lock();
+    void unlock();
+    
 private:
     
     vector<PhysicsObject*>   objects;
-    
+    Poco::Mutex              mutex;
 };
 
 

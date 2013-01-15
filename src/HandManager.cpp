@@ -61,7 +61,8 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
 #endif
     
     // Only handle add/remove of hands here. Positions updated in update loop.
-    // TODO: Probably should add some mutexes for the physics objects so we don't delete one mid-read
+
+    physicsManager->lock();
     
     if (event.handStatus == HAND_TRACKING_STARTED) {
         GravitationalPhysicsObject * gravitron = new GravitationalPhysicsObject();
@@ -91,6 +92,8 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         }
         
     }
+    
+    physicsManager->unlock();
 }
 
 void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, ofPoint openNIPosition) {
