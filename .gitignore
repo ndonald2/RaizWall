@@ -5,4 +5,4 @@
 # Project
 *xcuserdata*
 *.app
-bin/data
+bin/data/openni
