@@ -384,26 +384,32 @@
 
 - (NSRect) getViewFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ self.openGLView frame ];
-    else if( windowMode == OF_FULLSCREEN )
-        return [ self.fullScreenView frame ];
+    @autoreleasepool{
+        if( windowMode == OF_WINDOW )
+            return [ self.openGLView frame ];
+        else if( windowMode == OF_FULLSCREEN )
+            return [ self.fullScreenView frame ];
+    }
 }
 
 - (NSRect) getWindowFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ self.openGLWindow frame ];
-    else if( windowMode == OF_FULLSCREEN )
-        return [ self.fullScreenWindow frame ];
+    @autoreleasepool {
+        if( windowMode == OF_WINDOW )
+            return [ self.openGLWindow frame ];
+        else if( windowMode == OF_FULLSCREEN )
+            return [ self.fullScreenWindow frame ];
+    }
 }
 
 - (NSRect) getScreenFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ [ self.openGLWindow screen ] frame ];
-    else if( windowMode == OF_FULLSCREEN )
-        return [ [ self.fullScreenWindow screen ] frame ];
+    @autoreleasepool {
+        if( windowMode == OF_WINDOW )
+            return [ [ self.openGLWindow screen ] frame ];
+        else if( windowMode == OF_FULLSCREEN )
+            return [ [ self.fullScreenWindow screen ] frame ];
+    }
 }
 
 - (void) setWindowPosition : (NSPoint)position

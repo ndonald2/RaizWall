@@ -13,6 +13,8 @@
 #define MIN_STRENGTH    1e2
 #define MAX_STRENGTH    1e6
 
+#define HAND_LOGGING    0
+
 void HandManager::setup(ofxOpenNI * openNIDevice, PhysicsManager * manager) {
     physicsManager = manager;
     this->openNIDevice = openNIDevice;
@@ -30,7 +32,9 @@ void HandManager::update() {
                 updatePosition(gravitron, hand.getPosition());
                 
                 ofPoint position = hand.getPosition();
+#if HAND_LOGGING
                 ofLogNotice() << "Updating Hand " << ofToString(hand.getID()) << ", " << ofToString(gravitron->getMass());
+#endif
             }
         }
     }
@@ -51,11 +55,18 @@ void HandManager::draw() {
 
 
 void HandManager::handEvent(ofxOpenNIHandEvent & event) {
-    ofLogNotice() << getHandStatusAsString(event.handStatus) << "for hand" << event.id << "from device" << event.deviceID;
+    
+#if HAND_LOGGING
+    ofLogNotice() << getHandStatusAsString(event.handStatus) << " for hand " << event.id << " from device " << event.deviceID;
+#endif
+    
+    // Only handle add/remove of hands here. Positions updated in update loop.
+    // TODO: Probably should add some mutexes for the physics objects so we don't delete one mid-read
+    
     if (event.handStatus == HAND_TRACKING_STARTED) {
         GravitationalPhysicsObject * gravitron = new GravitationalPhysicsObject();
                 
-        gravitron->setIsRepulsor(true);
+        gravitron->setIsRepulsor(false);
         gravitron->setMass(1e6);
         gravitron->setIsSolid(false);
         gravitron->setIsAnchored(true);
@@ -67,18 +78,16 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         physicsManager->addObject(gravitron);
         
         handGravitrons[event.id] = gravitron;
-    } else {
+    }
+    else if (event.handStatus == HAND_TRACKING_STOPPED) {
+
         map<XnUserID, GravitationalPhysicsObject*>::iterator it;
         it = handGravitrons.find(event.id);
         if (it != handGravitrons.end()) {
             GravitationalPhysicsObject * gravitron = it->second;
-            if (event.handStatus == HAND_TRACKING_STOPPED) {
-                physicsManager->removeObject(gravitron);
-                gravitron->setMass(0);
-                handGravitrons.erase(event.id);
-            } else if (event.handStatus == HAND_TRACKING_UPDATED) {
-                updatePosition(gravitron, event.position);
-            }
+            physicsManager->removeObject(gravitron);
+            handGravitrons.erase(event.id);
+            delete gravitron;
         }
         
     }

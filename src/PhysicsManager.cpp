@@ -15,7 +15,13 @@ void PhysicsManager::addObject(PhysicsObject *object)
 
 void PhysicsManager::removeObject(PhysicsObject *object)
 {
-    // TODO: find them and destroy them
+    vector<PhysicsObject*>::iterator it = objects.begin();
+    while (it++ != objects.end()){
+        if (*it == object){
+            objects.erase(it);
+            break;
+        }
+    }
 }
 
 void PhysicsManager::update(float dTime)

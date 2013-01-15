@@ -16,11 +16,14 @@
 #include <map.h>
 
 class HandManager {
+    
     public:
         void setup(ofxOpenNI * openNIDevice, PhysicsManager * manager);
         void update();
         void draw();
+    
     private:
+    
         PhysicsManager * physicsManager;
         ofxOpenNI * openNIDevice;
         map<XnUserID, GravitationalPhysicsObject*> handGravitrons;
