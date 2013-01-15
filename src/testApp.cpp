@@ -1,6 +1,7 @@
 #include "testApp.h"
 
 #define NUM_DOTS    10
+#define MOUSE_RIGHT 2
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -8,14 +9,17 @@ void testApp::setup(){
     ofBackground(0, 0, 0);
     ofSetCircleResolution(32);
     
+    setupOpenNI();
+    
+    
     // add objects to physics manager
-    gravitron = new GravitationalPhysicsObject();
-    gravitron->setMass(0);
-    gravitron->setIsSolid(false);
-    gravitron->setIsAnchored(false);
-    gravitron->setPosition(ofGetWindowSize()/2.0f);
-    gravitron->setMinDistanceThresh(200);
-    physicsManager.addObject(gravitron);
+    mouseGravitron = new GravitationalPhysicsObject();
+    mouseGravitron->setMass(0);
+    mouseGravitron->setIsSolid(false);
+    mouseGravitron->setIsAnchored(false);
+    mouseGravitron->setPosition(ofGetWindowSize()/2.0f);
+    mouseGravitron->setMinDistanceThresh(200);
+    physicsManager.addObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
         DotPhysicsObject * dot = new DotPhysicsObject(i*10 + 10, ofColor(ofRandom(64,200)));
@@ -27,15 +31,35 @@ void testApp::setup(){
     
 }
 
+void testApp::setupOpenNI() {
+    openNIDevice.setup();
+    openNIDevice.addImageGenerator();
+    openNIDevice.addDepthGenerator();
+    openNIDevice.setRegister(true);
+    openNIDevice.setMirror(true);
+    
+    // setup the hand generator
+    openNIDevice.addHandsGenerator();
+    openNIDevice.addAllHandFocusGestures();
+    openNIDevice.setMaxNumHands(4);
+    
+    openNIDevice.start();
+    handManager.setup(&openNIDevice, &physicsManager);
+}
+
 //--------------------------------------------------------------
 void testApp::update(){
-    gravitron->setPosition(ofVec2f(mouseX,mouseY));
+    openNIDevice.update();
+    handManager.update();
+    mouseGravitron->setPosition(ofVec2f(mouseX,mouseY));
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+//    openNIDevice.drawDebug(0, 0, ofGetWidth() * 2, ofGetHeight());
     physicsManager.draw();
+    handManager.draw();
 }
 
 //--------------------------------------------------------------
@@ -55,6 +79,7 @@ void testApp::keyPressed(int key){
     }
 }
 
+
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
 
@@ -71,12 +96,17 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    gravitron->setMass( 1e6 );
+    if (button == MOUSE_RIGHT) {
+        mouseGravitron->setIsRepulsor(true);
+    } else {
+        mouseGravitron->setIsRepulsor(false);
+    }
+    mouseGravitron->setMass( 1e6 );
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    gravitron->setMass( 0 );
+    mouseGravitron->setMass( 0 );
 }
 
 //--------------------------------------------------------------

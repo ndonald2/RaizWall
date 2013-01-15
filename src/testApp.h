@@ -3,6 +3,9 @@
 #include "ofMain.h"
 #include "PhysicsManager.h"
 #include "DotPhysicsObject.h"
+#include "ofxOpenNI.h"
+#include "HandManager.h"
+#include <map.h>
 
 class testApp : public ofBaseApp{
     
@@ -22,9 +25,13 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     private:
-    
         PhysicsManager                  physicsManager;
-        GravitationalPhysicsObject      *gravitron;
+        GravitationalPhysicsObject      *mouseGravitron;
+        HandManager                     handManager;
     
         float                           timeScale;
+    
+        ofxOpenNI openNIDevice;
+
+        void setupOpenNI();
 };

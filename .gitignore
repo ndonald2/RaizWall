@@ -5,3 +5,4 @@
 # Project
 *xcuserdata*
 *.app
+bin/data
