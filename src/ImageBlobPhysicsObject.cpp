@@ -16,6 +16,5 @@ ImageBlobPhysicsObject::ImageBlobPhysicsObject(const string & imagePath, float r
 
 void ImageBlobPhysicsObject::draw()
 {
-    ofSetColor(255,255,255);
     image.draw(position - ofPoint(boundingRadius, boundingRadius), 2*boundingRadius, 2*boundingRadius);
 }

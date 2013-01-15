@@ -45,7 +45,7 @@ void HandManager::update() {
 }
 
 void HandManager::draw() {
-    ofPushMatrix();
+    ofPushStyle();
     ofSetColor(255, 0, 0);
     
     physicsManager->lock();
@@ -56,7 +56,7 @@ void HandManager::draw() {
         ofVec2f position = gravitron->getPosition();
         ofCircle(position.x, position.y, 10);
     }
-    ofPopMatrix();
+    ofPopStyle();
     
     physicsManager->unlock();
 }

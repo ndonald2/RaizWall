@@ -17,6 +17,8 @@ DotPhysicsObject::DotPhysicsObject(float _radius, ofColor _color)
 
 void DotPhysicsObject::draw()
 {
+    ofPushStyle();
     ofSetColor(color);
     ofCircle(position, boundingRadius);
+    ofPopStyle();
 }
