@@ -64,15 +64,9 @@ void testApp::setupOpenNI() {
     openNIDevice.setMirror(true);
     openNIDevice.setThreadSleep(15000);
     
-    // setup the hand generator
-    openNIDevice.addHandsGenerator();
-    openNIDevice.addAllHandFocusGestures();
-    openNIDevice.setMaxNumHands(4);
-    openNIDevice.getHandsGenerator().SetSmoothing(0.2);
+    handManager.setup(&openNIDevice, &physicsManager);
     
     openNIDevice.start();
-    
-    handManager.setup(&openNIDevice, &physicsManager);
 }
 
 //--------------------------------------------------------------
