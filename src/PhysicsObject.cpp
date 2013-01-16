@@ -13,6 +13,7 @@ PhysicsObject::PhysicsObject()
 {
     isAnchored = false;
     isSolid = true;
+    collisionMultiplier = 0.9f;
     boundingRadius = 1.0f;
     ambientFriction = 0.2f;
     mass = 10.0;
@@ -63,21 +64,21 @@ void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
     
     // Collide against walls
     if (position.x - boundingRadius < 0){
-        velocity.x *= -1;
+        velocity.x *= -collisionMultiplier;
         position.x = boundingRadius;
     }
     else if (position.x + boundingRadius > ofGetWidth())
     {
-        velocity.x *= -1;
+        velocity.x *= -collisionMultiplier;
         position.x = ofGetWidth() - boundingRadius;
     }
     
     if (position.y - boundingRadius < 0){
-        velocity.y *= -1;
+        velocity.y *= -collisionMultiplier;
         position.y = boundingRadius;
     }
     else if (position.y + boundingRadius > ofGetHeight()){
-        velocity.y *= -1;
+        velocity.y *= -collisionMultiplier;
         position.y = ofGetHeight() - boundingRadius;
     }
 }
@@ -111,8 +112,8 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
     
     // lossy collision
     // TODO: Make this a parameter
-//    velocity *= 0.9;
-//    otherObject->velocity *= 0.9;
+    velocity *= collisionMultiplier;
+    otherObject->velocity *= otherObject->collisionMultiplier;
     
     // get components perpendicular to tangent
     float pt1i = velocity.dot(collisionVect);
@@ -224,6 +225,11 @@ void PhysicsObject::setIsAnchored(bool _isAnchored)
 void PhysicsObject::setIsSolid(bool _isSolid)
 {
     isSolid = _isSolid;
+}
+
+void PhysicsObject::setCollisionMultiplier(float multiplier)
+{
+    collisionMultiplier = multiplier;
 }
 
 void PhysicsObject::setMass(float newMass)

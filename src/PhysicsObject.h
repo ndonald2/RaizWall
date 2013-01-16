@@ -48,6 +48,8 @@ public:
     
     virtual void setIsSolid(bool _isSolid);
     
+    virtual void setCollisionMultiplier(float multiplier);
+    
     virtual void setMass(float newMass);
     
     virtual void setPosition(const ofVec2f & newPosition);
@@ -59,6 +61,7 @@ public:
     
     inline bool             getIsAnchored() { return isAnchored; };
     inline bool             getIsSolid() { return isSolid; };
+    inline float            getCollisionMultiplier() { return collisionMultiplier; }
     inline float            getBoundingRadius() { return boundingRadius; };
     inline float            getMass() { return mass; };
     inline const ofVec2f  & getPosition() { return position; };
@@ -74,6 +77,8 @@ protected:
     
     float   mass;
     float   ambientFriction;
+    
+    float   collisionMultiplier;
     
     float   boundingRadius;
     
