@@ -4,7 +4,8 @@
 #include "ImageBlobPhysicsObject.h"
 
 #define NUM_DOTS    60
-#define ICON_SIZE   35
+#define ICON_SIZE_MIN   35
+#define ICON_SIZE_MAX   50
 #define MOUSE_RIGHT 2
 
 //--------------------------------------------------------------
@@ -24,30 +25,23 @@ void testApp::setup(){
     physicsManager.addObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(5, 20), ofColor::fromHsb(0, ofRandom(60,255), ofRandom(60,255)));
+        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(6,12), ofColor::fromHsb(0, ofRandom(60,255), 255));
         dot->setIsSolid(false);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
     
-    ImageBlobPhysicsObject *imageBlob = new ImageBlobPhysicsObject("images/pubget.png", ICON_SIZE);
-    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-    imageBlob->setMass(1.0);
-    imageBlob->setAmbientFriction(0.01);
-    physicsManager.addObject(imageBlob);
+    // These are repeating. Need to get more icons.
+    const string iconNames[6] = {"images/pubget.png", "images/pubget.png", "images/macys.png", "images/macys.png", "images/bloomies.png", "images/bloomies.png"};
     
-    imageBlob = new ImageBlobPhysicsObject("images/macys.png", ICON_SIZE);
-    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-    imageBlob->setMass(1.0);
-    imageBlob->setAmbientFriction(0.01);
-    physicsManager.addObject(imageBlob);
-    
-    imageBlob = new ImageBlobPhysicsObject("images/bloomies.png", ICON_SIZE);
-    imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-    imageBlob->setMass(1.0);
-    imageBlob->setAmbientFriction(0.01);
-    physicsManager.addObject(imageBlob);
-    
+    ImageBlobPhysicsObject *imageBlob = NULL;
+    for (int i=0; i<6; i++){
+        imageBlob = new ImageBlobPhysicsObject(iconNames[i], ofRandom(ICON_SIZE_MIN, ICON_SIZE_MAX));
+        imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+        imageBlob->setAmbientFriction(0.01);
+        physicsManager.addObject(imageBlob);
+    }
+        
     timeScale = 1.0f;
     
 }
