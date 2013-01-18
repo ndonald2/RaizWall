@@ -56,9 +56,10 @@ void HandManager::draw() {
         ofVec2f position = gravitron->getPosition();
         ofCircle(position.x, position.y, 10);
     }
-    ofPopStyle();
     
     physicsManager->unlock();
+    
+    ofPopStyle();
 }
 
 

@@ -43,7 +43,7 @@
         
     for (int dm=nResolutions-1; dm >0; dm--){
         CGDisplayModeRef mode = (CGDisplayModeRef)CFArrayGetValueAtIndex(allResolutions, dm);        
-        NSString *resString = [NSString stringWithFormat:@"%i x %i", CGDisplayModeGetWidth(mode), CGDisplayModeGetHeight(mode)];
+        NSString *resString = [NSString stringWithFormat:@"%li x %li", CGDisplayModeGetWidth(mode), CGDisplayModeGetHeight(mode)];
         
         // no duplicate keys
         [resDict setObject:[NSNull null] forKey:resString];
@@ -55,7 +55,7 @@
     
     // select current resolution
     CGDisplayModeRef currentMode = CGDisplayCopyDisplayMode(CGMainDisplayID());
-    NSString *currentModeString = [NSString stringWithFormat:@"%i x %i", CGDisplayModeGetWidth(currentMode), CGDisplayModeGetHeight(currentMode)];
+    NSString *currentModeString = [NSString stringWithFormat:@"%li x %li", CGDisplayModeGetWidth(currentMode), CGDisplayModeGetHeight(currentMode)];
     [self.resBox selectItemWithTitle:currentModeString];
     
     CFRelease(allResolutions);

@@ -15,7 +15,6 @@ void testApp::setup(){
     
     setupOpenNI();
     
-    
     // add objects to physics manager
     mouseGravitron = new GravitationalPhysicsObject();
     mouseGravitron->setMass(0);
