@@ -18,7 +18,15 @@
 void HandManager::setup(ofxOpenNI * openNIDevice, PhysicsManager * manager) {
     physicsManager = manager;
     this->openNIDevice = openNIDevice;
+    // setup the hand generator
+    openNIDevice->addHandsGenerator();
+    openNIDevice->addGestureGenerator();
+    openNIDevice->addAllHandFocusGestures();
+    openNIDevice->setMaxNumHands(4);
+    openNIDevice->getHandsGenerator().SetSmoothing(0.2);
+    
     ofAddListener(openNIDevice->handEvent, this, &HandManager::handEvent);
+    ofAddListener(openNIDevice->gestureEvent, this, &HandManager::gestureEvent);
 }
 
 void HandManager::update() {
@@ -46,13 +54,17 @@ void HandManager::update() {
 
 void HandManager::draw() {
     ofPushStyle();
-    ofSetColor(255, 0, 0);
     
     physicsManager->lock();
     
     map<XnUserID, GravitationalPhysicsObject*>::iterator it;
     for (it = handGravitrons.begin(); it != handGravitrons.end(); ++it) {
         GravitationalPhysicsObject * gravitron = it->second;
+        if (gravitron->getIsRepulsor()) {
+            ofSetColor(255, 0, 0);
+        } else {
+            ofSetColor(0, 255, 0);
+        }
         ofVec2f position = gravitron->getPosition();
         ofCircle(position.x, position.y, 10);
     }
@@ -76,7 +88,7 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
     if (event.handStatus == HAND_TRACKING_STARTED) {
         GravitationalPhysicsObject * gravitron = new GravitationalPhysicsObject();
                 
-        gravitron->setIsRepulsor(false);
+        gravitron->setIsRepulsor(areRepulsors);
         gravitron->setMass(1e6);
         gravitron->setIsSolid(false);
         gravitron->setIsAnchored(true);
@@ -105,6 +117,15 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
     physicsManager->unlock();
 }
 
+void HandManager::gestureEvent(ofxOpenNIGestureEvent & event) {
+    if (event.gestureName.compare("Wave") == 0) {
+#if HAND_LOGGING
+        ofLogNotice() << event.timestampMillis << ": Found " << event.gestureName;
+#endif
+        setAreRepulsors(!areRepulsors);
+    }
+}
+
 void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition) {
     int x = (openNIPosition.x / openNIDevice->getWidth()) * ofGetWidth();
     int y = (openNIPosition.y / openNIDevice->getHeight()) * ofGetHeight();
@@ -113,4 +134,16 @@ void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, const o
     float strength = ofLerp(MAX_STRENGTH, MIN_STRENGTH, depth);
     gravitron->setMass(strength);
     gravitron->setPosition(ofVec2f(x, y));
+}
+
+void HandManager::setAreRepulsors(bool areRepulsors) {
+    if (this->areRepulsors != areRepulsors) {
+        physicsManager->lock();
+        this->areRepulsors = areRepulsors;
+        map<XnUserID, GravitationalPhysicsObject*>::iterator it;
+        for (it = handGravitrons.begin(); it != handGravitrons.end(); ++it) {
+            it->second->setIsRepulsor(areRepulsors);
+        }
+        physicsManager->unlock();
+    }
 }
