@@ -705,8 +705,8 @@
 		C8C8454516A4B21D00BCFACA /* HandTracking */ = {
 			isa = PBXGroup;
 			children = (
-				C8C8454616A4B22900BCFACA /* HandManager.cpp */,
 				C8C8454716A4B22900BCFACA /* HandManager.h */,
+				C8C8454616A4B22900BCFACA /* HandManager.cpp */,
 			);
 			name = HandTracking;
 			sourceTree = "<group>";

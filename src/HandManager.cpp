@@ -9,8 +9,8 @@
 #include "HandManager.h"
 
 #define MIN_DEPTH       400
-#define MAX_DEPTH       4000
-#define MIN_STRENGTH    1e2
+#define MAX_DEPTH       3000
+#define MIN_STRENGTH    100
 #define MAX_STRENGTH    1e6
 
 #define HAND_LOGGING    0
@@ -26,7 +26,9 @@ void HandManager::setup(ofxOpenNI * openNIDevice, PhysicsManager * manager) {
     openNIDevice->getHandsGenerator().SetSmoothing(0.2);
     
     ofAddListener(openNIDevice->handEvent, this, &HandManager::handEvent);
-    ofAddListener(openNIDevice->gestureEvent, this, &HandManager::gestureEvent);
+    
+    // Temporarily disabling this. Attractors are more interesting currently
+    // ofAddListener(openNIDevice->gestureEvent, this, &HandManager::gestureEvent);
 }
 
 void HandManager::update() {

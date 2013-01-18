@@ -52,6 +52,8 @@ public:
     
     virtual void setMass(float newMass);
     
+    virtual void setAmbientFriction(float ambientFriction);
+    
     virtual void setPosition(const ofVec2f & newPosition);
     
     virtual void setVelocity(const ofVec2f & newVelocity);
@@ -64,6 +66,7 @@ public:
     inline float            getCollisionMultiplier() { return collisionMultiplier; }
     inline float            getBoundingRadius() { return boundingRadius; };
     inline float            getMass() { return mass; };
+    inline float            getAmbientFriction() { return ambientFriction; };
     inline const ofVec2f  & getPosition() { return position; };
     inline const ofVec2f  & getLastPosition() { return lastPosition; };
     inline const ofVec2f  & getVelocity() { return velocity; };
@@ -77,9 +80,7 @@ protected:
     
     float   mass;
     float   ambientFriction;
-    
     float   collisionMultiplier;
-    
     float   boundingRadius;
     
     ofVec2f force;

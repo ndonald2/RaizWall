@@ -13,9 +13,9 @@ PhysicsObject::PhysicsObject()
 {
     isAnchored = false;
     isSolid = true;
-    collisionMultiplier = 0.9f;
+    collisionMultiplier = 0.95f;
     boundingRadius = 1.0f;
-    ambientFriction = 0.2f;
+    ambientFriction = 0.15f;
     mass = 10.0;
 }
 
@@ -158,7 +158,8 @@ void PhysicsObject::move(float dTime)
 
 bool PhysicsObject::intersecting(PhysicsObject *otherObject)
 {
-    if (otherObject->boundingRadius == 0 || boundingRadius == 0) return false;
+    if (otherObject->boundingRadius == 0 || boundingRadius == 0 || !isSolid || !otherObject->isSolid) return false;
+    
     return (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position)) > 0;
 }
 
@@ -235,6 +236,11 @@ void PhysicsObject::setCollisionMultiplier(float multiplier)
 void PhysicsObject::setMass(float newMass)
 {
     mass = MAX(0, newMass);
+}
+
+void PhysicsObject::setAmbientFriction(float ambientFriction)
+{
+    ambientFriction = CLAMP(ambientFriction, 0.0, 1.0);
 }
 
 void PhysicsObject::setPosition(const ofVec2f & newPosition)
