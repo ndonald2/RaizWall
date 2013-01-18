@@ -85,7 +85,7 @@ void testApp::draw(){
     //          Could use trails to create a neat effect on user's body as they move around
     ofPushStyle();
     ofSetColor(200, 200, 200);
-    openNIDevice.drawImage(0, 0, ofGetWidth(), ofGetHeight());
+    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
     ofPopStyle();
     
     physicsManager.draw();
@@ -100,7 +100,7 @@ void testApp::keyPressed(int key){
         case OF_KEY_UP:
             kinectTiltAngle = ofClamp(kinectTiltAngle + 1, -30, 30);
             kinectHardwareDriver.setTiltAngle(kinectTiltAngle);
-            break;
+            break;  
             
         case OF_KEY_DOWN:
             kinectTiltAngle = ofClamp(kinectTiltAngle - 1, -30, 30);
