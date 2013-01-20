@@ -3,17 +3,17 @@
 #include "DotPhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
-#define NUM_DOTS    60
+#define NUM_DOTS        1000
 #define ICON_SIZE_MIN   35
 #define ICON_SIZE_MAX   50
-#define MOUSE_RIGHT 2
+#define MOUSE_RIGHT     2
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
     ofSetCircleResolution(32);
     
-    setupOpenNI();
+    //setupOpenNI();
     
     // add objects to physics manager
     mouseGravitron = new GravitationalPhysicsObject();
@@ -25,23 +25,23 @@ void testApp::setup(){
     physicsManager.addObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(6,12), ofColor::fromHsb(0, ofRandom(60,255), 255));
+        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(2.0f,4.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
         dot->setIsSolid(false);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addObject(dot);
     }
     
     // These are repeating. Need to get more icons.
-    const string iconNames[6] = {"images/pubget.png", "images/pubget.png", "images/macys.png", "images/macys.png", "images/bloomies.png", "images/bloomies.png"};
+//    const string iconNames[6] = {"images/pubget.png", "images/pubget.png", "images/macys.png", "images/macys.png", "images/bloomies.png", "images/bloomies.png"};
+//    
+//    ImageBlobPhysicsObject *imageBlob = NULL;
+//    for (int i=0; i<6; i++){
+//        imageBlob = new ImageBlobPhysicsObject(iconNames[i], ofRandom(ICON_SIZE_MIN, ICON_SIZE_MAX));
+//        imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+//        imageBlob->setAmbientFriction(0.01);
+//        physicsManager.addObject(imageBlob);
+//    }
     
-    ImageBlobPhysicsObject *imageBlob = NULL;
-    for (int i=0; i<6; i++){
-        imageBlob = new ImageBlobPhysicsObject(iconNames[i], ofRandom(ICON_SIZE_MIN, ICON_SIZE_MAX));
-        imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-        imageBlob->setAmbientFriction(0.01);
-        physicsManager.addObject(imageBlob);
-    }
-        
     timeScale = 1.0f;
     
 }
@@ -69,8 +69,8 @@ void testApp::setupOpenNI() {
 
 //--------------------------------------------------------------
 void testApp::update(){
-    openNIDevice.update();
-    handManager.update();
+    //openNIDevice.update();
+    //handManager.update();
     mouseGravitron->setPosition(ofVec2f(mouseX,mouseY));
     physicsManager.update(ofGetLastFrameTime()*timeScale);
 }
