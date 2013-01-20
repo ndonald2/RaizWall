@@ -99,7 +99,7 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         
         updatePosition(gravitron, event.position);
         
-        physicsManager->addObject(gravitron);
+        physicsManager->addActiveObject(gravitron);
         
         handGravitrons[event.id] = gravitron;
     }
@@ -109,7 +109,7 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         it = handGravitrons.find(event.id);
         if (it != handGravitrons.end()) {
             GravitationalPhysicsObject * gravitron = it->second;
-            physicsManager->removeObject(gravitron);
+            physicsManager->removeActiveObject(gravitron);
             handGravitrons.erase(event.id);
             delete gravitron;
         }

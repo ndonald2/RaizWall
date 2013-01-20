@@ -6,16 +6,16 @@
 //
 //
 
-#include "DotPhysicsObject.h"
+#include "CircularParticlePhysicsObject.h"
 
-DotPhysicsObject::DotPhysicsObject(float _radius, ofColor _color)
+CircularParticlePhysicsObject::CircularParticlePhysicsObject(float _radius, ofColor _color)
 {
     boundingRadius = _radius;
     mass = 0.001 * _radius * _radius;
     color = _color;
 }
 
-void DotPhysicsObject::draw()
+void CircularParticlePhysicsObject::draw()
 {
     ofPushStyle();
     ofSetColor(color);

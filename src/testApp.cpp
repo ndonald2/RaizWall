@@ -1,6 +1,6 @@
 #include "testApp.h"
 
-#include "DotPhysicsObject.h"
+#include "CircularParticlePhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
 #define NUM_DOTS        1000
@@ -22,13 +22,14 @@ void testApp::setup(){
     mouseGravitron->setIsAnchored(false);
     mouseGravitron->setPosition(ofGetWindowSize()/2.0f);
     mouseGravitron->setMinDistanceThresh(200);
-    physicsManager.addObject(mouseGravitron);
+    physicsManager.addActiveObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        DotPhysicsObject * dot = new DotPhysicsObject(ofRandom(2.0f,4.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
+        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(2.0f,4.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
         dot->setIsSolid(false);
+        dot->setAmbientFriction(0.5f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-        physicsManager.addObject(dot);
+        physicsManager.addPassiveObject(dot);
     }
     
     // These are repeating. Need to get more icons.

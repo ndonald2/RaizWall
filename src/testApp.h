@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "PhysicsManager.h"
 #include "GravitationalPhysicsObject.h"
-#include "DotPhysicsObject.h"
 #include "ofxOpenNI.h"
 #include "ofxHardwareDriver.h"
 #include "HandManager.h"

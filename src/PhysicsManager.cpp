@@ -8,20 +8,40 @@
 
 #include "PhysicsManager.h"
 
-void PhysicsManager::addObject(PhysicsObject *object)
+void PhysicsManager::addActiveObject(ActivePhysicsObject *object)
 {
     mutex.lock();
-    objects.push_back(object);
+    activeObjects.push_back(object);
     mutex.unlock();
 }
 
-void PhysicsManager::removeObject(PhysicsObject *object)
+void PhysicsManager::removeActiveObject(ActivePhysicsObject *object)
 {
     mutex.lock();
-    vector<PhysicsObject*>::iterator it = objects.begin();
-    while (it++ != objects.end()){
+    vector<ActivePhysicsObject*>::iterator it = activeObjects.begin();
+    while (it++ != activeObjects.end()){
         if (*it == object){
-            objects.erase(it);
+            activeObjects.erase(it);
+            break;
+        }
+    }
+    mutex.unlock();
+}
+
+void PhysicsManager::addPassiveObject(PhysicsObject *object)
+{
+    mutex.lock();
+    passiveObjects.push_back(object);
+    mutex.unlock();
+}
+
+void PhysicsManager::removePassiveObject(PhysicsObject *object)
+{
+    mutex.lock();
+    vector<PhysicsObject*>::iterator it = passiveObjects.begin();
+    while (it++ != passiveObjects.end()){
+        if (*it == object){
+            passiveObjects.erase(it);
             break;
         }
     }
@@ -31,35 +51,38 @@ void PhysicsManager::removeObject(PhysicsObject *object)
 void PhysicsManager::update(float dTime)
 {
     mutex.lock();
-    
+     
     // Step 1: Move
-    for (int i=0; i<objects.size(); i++)
+    for (int i=0; i<activeObjects.size(); i++)
     {
-        objects[i]->move(dTime);
+        activeObjects[i]->move(dTime);
+    }
+    for (int i=0; i<passiveObjects.size(); i++)
+    {
+        passiveObjects[i]->move(dTime);
     }
     
     // Step 2: Update physics state and resolve collisions
-    // only need N-i objects for next operation
-    vector<PhysicsObject*>::const_iterator first = objects.begin() + 1;
-    vector<PhysicsObject*>::const_iterator last = objects.end();
-    for (int i=0; i<objects.size(); i++)
+    // only need N-i objects for next operation, only active objects apply forces    
+    for (int i=0; i<activeObjects.size(); i++)
     {
-        vector<PhysicsObject*> otherObjects(first,last);
-        objects[i]->update(otherObjects, dTime);
-        first++;
+        activeObjects[i]->applyForces(passiveObjects, dTime);
     }
     
     // Step 3 - draw (separate call)
-    
     mutex.unlock();
 }
 
 void PhysicsManager::draw()
 {
     mutex.lock();
-    for (int i=0; i<objects.size(); i++)
+    for (int i=0; i<activeObjects.size(); i++)
     {
-        objects[i]->draw();
+        activeObjects[i]->draw();
+    }
+    for (int i=0; i<passiveObjects.size(); i++)
+    {
+        passiveObjects[i]->draw();
     }
     mutex.unlock();
 }

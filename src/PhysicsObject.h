@@ -11,23 +11,19 @@
 
 #include "ofMain.h"
 
+// Base physics object is "passive" - it does not apply forces, only reacts to them
+
 class PhysicsObject {
   
 public:
     
     PhysicsObject();
-    
-    // Update force/accel/velocity and handle collisions
-    virtual void update(vector<PhysicsObject*> & otherObjects, float dTime);
-    
+
     // Collide with other objects
     virtual void collide(PhysicsObject * otherObject, float dTime);
     
     // Update position
     virtual void move(float dTime);
-    
-    // Force applied to other object
-    virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime) { return ofVec2f(); };
 
     // Are we intersecting? Basic bounding radius test (can be overridden)
     virtual bool intersecting(PhysicsObject * otherObject);
@@ -41,6 +37,11 @@ public:
     // Draw
     virtual void draw() {};
     
+    // --------- Forces -------------
+    // These must be mutexed! Can update forces on multiple threads
+    inline void setForce(const ofVec2f & newForce);
+    inline void addForce(const ofVec2f & forceToAdd);
+    inline const ofVec2f getForce();
     
     //--------- Setters ------------
     
@@ -52,7 +53,7 @@ public:
     
     virtual void setMass(float newMass);
     
-    virtual void setAmbientFriction(float ambientFriction);
+    virtual void setAmbientFriction(float newAmbientFriction);
     
     virtual void setPosition(const ofVec2f & newPosition);
     
@@ -72,7 +73,6 @@ public:
     inline const ofVec2f  & getVelocity() { return velocity; };
     inline const ofVec2f  & getLastVelocity() { return lastVelocity; };
     
-    
 protected:
     
     bool    isAnchored;
@@ -89,6 +89,24 @@ protected:
     ofVec2f velocity;
     ofVec2f lastVelocity;
     
+    Poco::Mutex forceMutex;
+    
 };
+
+
+#pragma mark - Active Object
+// Active objects - apply and respond to forces
+
+class ActivePhysicsObject : public PhysicsObject
+{
+
+public:
+    // Update force/accel/velocity on other objects
+    virtual void applyForces(vector<PhysicsObject*> & otherObjects, float dTime);
+    
+    // Force applied to other object
+    virtual ofVec2f forceAppliedTo(PhysicsObject * otherObject, float dTime) { return ofVec2f::zero(); };
+};
+
 
 #endif /* defined(__raizWall__PhysicsObject__) */

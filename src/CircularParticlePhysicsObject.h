@@ -9,13 +9,13 @@
 #ifndef __raizWall__DotPhysicsObject__
 #define __raizWall__DotPhysicsObject__
 
-#include "GravitationalPhysicsObject.h"
+#include "PhysicsObject.h"
 
-class DotPhysicsObject : public PhysicsObject {
+class CircularParticlePhysicsObject : public PhysicsObject {
     
 public:
     
-    DotPhysicsObject(float _radius, ofColor _color);
+    CircularParticlePhysicsObject(float _radius, ofColor _color);
     
     void draw();
     

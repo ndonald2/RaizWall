@@ -16,8 +16,14 @@ class PhysicsManager {
 
 public:
 
-    void addObject(PhysicsObject *object);
-    void removeObject(PhysicsObject *object);
+    // Active objects apply forces to other objects, but can also have forces
+    // applied to them.
+    void addActiveObject(ActivePhysicsObject *object);
+    void removeActiveObject(ActivePhysicsObject *object);
+    
+    // Passive objects only react to other forces
+    void addPassiveObject(PhysicsObject *object);
+    void removePassiveObject(PhysicsObject *object);
     
     void update(float dTime);
     void draw();
@@ -29,8 +35,9 @@ public:
     
 private:
     
-    vector<PhysicsObject*>   objects;
-    Poco::Mutex              mutex;
+    vector<ActivePhysicsObject*>    activeObjects;
+    vector<PhysicsObject*>          passiveObjects;
+    Poco::Mutex                     mutex;
 };
 
 

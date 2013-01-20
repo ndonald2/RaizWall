@@ -19,71 +19,6 @@ PhysicsObject::PhysicsObject()
     mass = 10.0;
 }
 
-void PhysicsObject::update(vector<PhysicsObject*> & otherObjects, float dTime)
-{    
-    for (int i=0; i<otherObjects.size(); i++){
-        
-        PhysicsObject *otherObject = otherObjects[i];
-        
-        // handle collisions
-        // A-posteriori collision detection
-        if (intersecting(otherObject) || passedThrough(otherObject) || otherObject->passedThrough(this)){
-            
-            collide(otherObject, dTime);
-            
-            // if still intersecting, split the difference
-            if (intersecting(otherObject))
-            {
-                ofVec2f difference = otherObject->position - position;
-                if (difference.length() == 0) difference = ofVec2f(1,0);
-                float overlap = (boundingRadius + otherObject->boundingRadius - position.distance(otherObject->position));
-                                
-                difference.normalize();
-                
-                if (isAnchored){
-                    otherObject->position += overlap * difference;
-                }
-                else if (otherObject->isAnchored){
-                    position -= overlap * difference;
-                }
-                else{
-                    position -= overlap * (difference/2.0f);
-                    otherObject->position += overlap * (difference/2.0f);
-                }
-            }
-        }
-            
-        // Calculate and update forces
-        ofVec2f forceToMe = otherObject->forceAppliedTo(this, dTime);
-        ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
-        
-        force += forceToMe;
-        otherObject->force += forceToOther;
-
-    }
-    
-    // Collide against walls
-    if (position.x - boundingRadius < 0){
-        velocity.x *= -collisionMultiplier;
-        position.x = boundingRadius;
-    }
-    else if (position.x + boundingRadius > ofGetWidth())
-    {
-        velocity.x *= -collisionMultiplier;
-        position.x = ofGetWidth() - boundingRadius;
-    }
-    
-    if (position.y - boundingRadius < 0){
-        velocity.y *= -collisionMultiplier;
-        position.y = boundingRadius;
-    }
-    else if (position.y + boundingRadius > ofGetHeight()){
-        velocity.y *= -collisionMultiplier;
-        position.y = ofGetHeight() - boundingRadius;
-    }
-}
-
-
 void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
 {
     
@@ -140,19 +75,40 @@ void PhysicsObject::move(float dTime)
     // Update position
     if (!isAnchored){
         
-        // apply friction (% loss per second)
-        velocity *= powf(1.0f - ambientFriction, dTime);
+        
+        // Collide against walls
+        if (position.x - boundingRadius < 0){
+            velocity.x *= -collisionMultiplier;
+            position.x = boundingRadius;
+        }
+        else if (position.x + boundingRadius > ofGetWidth())
+        {
+            velocity.x *= -collisionMultiplier;
+            position.x = ofGetWidth() - boundingRadius;
+        }
+        
+        if (position.y - boundingRadius < 0){
+            velocity.y *= -collisionMultiplier;
+            position.y = boundingRadius;
+        }
+        else if (position.y + boundingRadius > ofGetHeight()){
+            velocity.y *= -collisionMultiplier;
+            position.y = ofGetHeight() - boundingRadius;
+        }
         
         // calculate accel based on force
-        ofVec2f acceleration = mass > 0 ? force/mass : ofVec2f::zero();
+        ofVec2f acceleration = mass > 0 ? getForce()/mass : ofVec2f::zero();
         lastVelocity = velocity;
         velocity += acceleration*dTime;
+        
+        // apply friction (% loss per second)
+        velocity *= powf(1.0f - ambientFriction, dTime);
 
         lastPosition = position;
         position += velocity*dTime;
         
         // reset force
-        force = ofVec2f();
+        setForce(ofVec2f::zero());
     }    
 }
 
@@ -215,6 +171,30 @@ float PhysicsObject::deltaTimeSinceIntersection(PhysicsObject *otherObject, floa
     }
 }
 
+#pragma mark - Forces
+
+void PhysicsObject::setForce(const ofVec2f & newForce)
+{
+    forceMutex.lock();
+    force = newForce;
+    forceMutex.unlock();
+}
+
+void PhysicsObject::addForce(const ofVec2f & forceToAdd)
+{
+    forceMutex.lock();
+    force += forceToAdd;
+    forceMutex.unlock();
+}
+
+const ofVec2f PhysicsObject::getForce()
+{
+    forceMutex.lock();
+    ofVec2f returnForce = force;
+    forceMutex.unlock();
+    return returnForce;
+}
+
 #pragma mark - Setters and Getters
 
 void PhysicsObject::setIsAnchored(bool _isAnchored)
@@ -238,9 +218,9 @@ void PhysicsObject::setMass(float newMass)
     mass = MAX(0, newMass);
 }
 
-void PhysicsObject::setAmbientFriction(float ambientFriction)
+void PhysicsObject::setAmbientFriction(float newAmbientFriction)
 {
-    ambientFriction = CLAMP(ambientFriction, 0.0, 1.0);
+    ambientFriction = CLAMP(newAmbientFriction, 0.0, 1.0);
 }
 
 void PhysicsObject::setPosition(const ofVec2f & newPosition)
@@ -255,4 +235,52 @@ void PhysicsObject::setVelocity(const ofVec2f & newVelocity)
         velocity = newVelocity;
         lastVelocity = velocity;
     }
+}
+
+#pragma mark - Active Physics Objects
+
+void ActivePhysicsObject::applyForces(vector<PhysicsObject*> & otherObjects, float dTime)
+{
+    for (int i=0; i<otherObjects.size(); i++){
+        
+        PhysicsObject *otherObject = otherObjects[i];
+        
+        // handle collisions
+        // A-posteriori collision detection
+        if (intersecting(otherObject) || passedThrough(otherObject) || otherObject->passedThrough(this)){
+            
+            collide(otherObject, dTime);
+            
+            // if still intersecting, split the difference
+            if (intersecting(otherObject))
+            {
+                ofVec2f difference = otherObject->getPosition() - position;
+                if (difference.length() == 0) difference = ofVec2f(1,0);
+                float overlap = (boundingRadius + otherObject->getBoundingRadius() - position.distance(otherObject->getPosition()));
+                
+                difference.normalize();
+                
+                if (isAnchored){
+                    otherObject->setPosition(overlap * difference);
+                }
+                else if (otherObject->getIsAnchored()){
+                    position -= overlap * difference;
+                }
+                else{
+                    position -= overlap * (difference/2.0f);
+                    otherObject->setPosition(overlap * (difference/2.0f));
+                }
+            }
+        }
+        
+        // Calculate and update forces
+        if (typeid(*otherObject) == typeid(ActivePhysicsObject)){
+            ofVec2f forceToMe = ((ActivePhysicsObject*)otherObject)->forceAppliedTo(this, dTime);
+            addForce(forceToMe);
+        }
+        ofVec2f forceToOther = forceAppliedTo(otherObject, dTime);
+        otherObject->addForce(forceToOther);
+        
+    }
+
 }
