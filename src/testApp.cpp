@@ -3,7 +3,7 @@
 #include "CircularParticlePhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
-#define NUM_DOTS        1000
+#define NUM_DOTS        2500
 #define ICON_SIZE_MIN   35
 #define ICON_SIZE_MAX   50
 #define MOUSE_RIGHT     2
@@ -25,7 +25,7 @@ void testApp::setup(){
     physicsManager.addActiveObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(2.0f,4.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
+        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(1.0f,2.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.5f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));

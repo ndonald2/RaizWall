@@ -7,7 +7,6 @@
 //
 
 #include "PhysicsObject.h"
-#include "PhysicsUtils.h"
 
 PhysicsObject::PhysicsObject()
 {
@@ -19,55 +18,40 @@ PhysicsObject::PhysicsObject()
     mass = 10.0;
 }
 
-void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
+void PhysicsObject::handleCollisions(vector<PhysicsObject *> &otherObjects, float dTime)
 {
-    
-    // Assume perfectly elastic collisions
-    // http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
-    
-    ofVec2f uvVelocity = velocity.normalized();
-    
-    // get interpolation (how far along were we in the frame when we collided)
-    float timeRatioOfCollision = deltaTimeSinceIntersection(otherObject, dTime)/dTime;
-    
-    if (!isAnchored){
-        // back up one interpolated step for tangential collision
-        position = lastPosition.getInterpolated(position, timeRatioOfCollision);
-        velocity = lastVelocity.getInterpolated(velocity, timeRatioOfCollision);
-    }
-    
-    if (!otherObject->isAnchored){
-        // back other object one interpolated step
-        otherObject->position = otherObject->lastPosition.getInterpolated(otherObject->position, timeRatioOfCollision);
-        otherObject->velocity = otherObject->lastVelocity.getInterpolated(otherObject->velocity, timeRatioOfCollision);
-    }
-    
-    ofVec2f collisionVect = (position - otherObject->position);
-    collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
-    
-    // lossy collision
-    // TODO: Make this a parameter
-    velocity *= collisionMultiplier;
-    otherObject->velocity *= otherObject->collisionMultiplier;
-    
-    // get components perpendicular to tangent
-    float pt1i = velocity.dot(collisionVect);
-    float pt2i = otherObject->velocity.dot(collisionVect);
-    
-    if (isAnchored && !otherObject->isAnchored){
-        otherObject->velocity += -2*pt2i*collisionVect;
-    }
-    else if (!isAnchored && otherObject->isAnchored){
-        velocity += -2*pt1i*collisionVect;
-    }
-    else{
-        float pt1f = ((pt1i * (mass - otherObject->mass)) + (2 * otherObject->mass * pt2i))/(mass + otherObject->mass);
-        float pt2f = -pt1f*mass/otherObject->mass;
+    for (int i=0; i<otherObjects.size(); i++){
         
-        velocity += (pt1f - pt1i)*collisionVect;
-        otherObject->velocity += (pt2f - pt2i)*collisionVect;
-    }
+        PhysicsObject *otherObject = otherObjects[i];
     
+        // handle collisions
+        // A-posteriori collision detection
+        if (intersecting(otherObject) || passedThrough(otherObject) || otherObject->passedThrough(this)){
+
+            collide(otherObject, dTime);
+
+            // if still intersecting, split the difference
+            if (intersecting(otherObject))
+            {
+                ofVec2f difference = otherObject->getPosition() - position;
+                if (difference.length() == 0) difference = ofVec2f(1,0);
+                float overlap = (boundingRadius + otherObject->getBoundingRadius() - position.distance(otherObject->getPosition()));
+
+                difference.normalize();
+
+                if (isAnchored){
+                    otherObject->setPosition(overlap * difference);
+                }
+                else if (otherObject->getIsAnchored()){
+                    position -= overlap * difference;
+                }
+                else{
+                    position -= overlap * (difference/2.0f);
+                    otherObject->setPosition(overlap * (difference/2.0f));
+                }
+            }
+        }
+    }
 }
 
 void PhysicsObject::move(float dTime)
@@ -171,6 +155,58 @@ float PhysicsObject::deltaTimeSinceIntersection(PhysicsObject *otherObject, floa
     }
 }
 
+
+void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
+{
+    
+    // Assume perfectly elastic collisions
+    // http://stackoverflow.com/questions/345838/ball-to-ball-collision-detection-and-handling
+    
+    ofVec2f uvVelocity = velocity.normalized();
+    
+    // get interpolation (how far along were we in the frame when we collided)
+    float timeRatioOfCollision = deltaTimeSinceIntersection(otherObject, dTime)/dTime;
+    
+    if (!isAnchored){
+        // back up one interpolated step for tangential collision
+        position = lastPosition.getInterpolated(position, timeRatioOfCollision);
+        velocity = lastVelocity.getInterpolated(velocity, timeRatioOfCollision);
+    }
+    
+    if (!otherObject->isAnchored){
+        // back other object one interpolated step
+        otherObject->position = otherObject->lastPosition.getInterpolated(otherObject->position, timeRatioOfCollision);
+        otherObject->velocity = otherObject->lastVelocity.getInterpolated(otherObject->velocity, timeRatioOfCollision);
+    }
+    
+    ofVec2f collisionVect = (position - otherObject->position);
+    collisionVect = collisionVect.length() == 0 ? ofVec2f(1,0) : collisionVect.normalized();
+    
+    // lossy collision
+    // TODO: Make this a parameter
+    velocity *= collisionMultiplier;
+    otherObject->velocity *= otherObject->collisionMultiplier;
+    
+    // get components perpendicular to tangent
+    float pt1i = velocity.dot(collisionVect);
+    float pt2i = otherObject->velocity.dot(collisionVect);
+    
+    if (isAnchored && !otherObject->isAnchored){
+        otherObject->velocity += -2*pt2i*collisionVect;
+    }
+    else if (!isAnchored && otherObject->isAnchored){
+        velocity += -2*pt1i*collisionVect;
+    }
+    else{
+        float pt1f = ((pt1i * (mass - otherObject->mass)) + (2 * otherObject->mass * pt2i))/(mass + otherObject->mass);
+        float pt2f = -pt1f*mass/otherObject->mass;
+        
+        velocity += (pt1f - pt1i)*collisionVect;
+        otherObject->velocity += (pt2f - pt2i)*collisionVect;
+    }
+    
+}
+
 #pragma mark - Forces
 
 void PhysicsObject::setForce(const ofVec2f & newForce)
@@ -244,34 +280,7 @@ void ActivePhysicsObject::applyForces(vector<PhysicsObject*> & otherObjects, flo
     for (int i=0; i<otherObjects.size(); i++){
         
         PhysicsObject *otherObject = otherObjects[i];
-        
-        // handle collisions
-        // A-posteriori collision detection
-        if (intersecting(otherObject) || passedThrough(otherObject) || otherObject->passedThrough(this)){
-            
-            collide(otherObject, dTime);
-            
-            // if still intersecting, split the difference
-            if (intersecting(otherObject))
-            {
-                ofVec2f difference = otherObject->getPosition() - position;
-                if (difference.length() == 0) difference = ofVec2f(1,0);
-                float overlap = (boundingRadius + otherObject->getBoundingRadius() - position.distance(otherObject->getPosition()));
-                
-                difference.normalize();
-                
-                if (isAnchored){
-                    otherObject->setPosition(overlap * difference);
-                }
-                else if (otherObject->getIsAnchored()){
-                    position -= overlap * difference;
-                }
-                else{
-                    position -= overlap * (difference/2.0f);
-                    otherObject->setPosition(overlap * (difference/2.0f));
-                }
-            }
-        }
+        if (otherObject == this) continue;
         
         // Calculate and update forces
         if (typeid(*otherObject) == typeid(ActivePhysicsObject)){

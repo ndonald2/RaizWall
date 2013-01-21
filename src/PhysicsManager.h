@@ -10,7 +10,11 @@
 #define __raizWall__PhysicsManager__
 
 #include "PhysicsObject.h"
+#include "PhysicsUtils.h"
 #include "ofMain.h"
+
+#define USE_THREADED_UPDATES  1
+#define NUM_UPDATE_THREADS    4
 
 class PhysicsManager {
 
@@ -35,9 +39,13 @@ public:
     
 private:
     
+    vector<PhysicsObject*>          allObjects;
     vector<ActivePhysicsObject*>    activeObjects;
     vector<PhysicsObject*>          passiveObjects;
     Poco::Mutex                     mutex;
+    
+    PhysicsMoveOperation            moveOperations[NUM_UPDATE_THREADS];
+    PhysicsUpdateOperation          updateOperations[NUM_UPDATE_THREADS];
 };
 
 

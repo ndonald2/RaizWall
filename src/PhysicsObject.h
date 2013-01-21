@@ -18,9 +18,9 @@ class PhysicsObject {
 public:
     
     PhysicsObject();
-
-    // Collide with other objects
-    virtual void collide(PhysicsObject * otherObject, float dTime);
+    
+    // Handle collisions with other objects
+    virtual void handleCollisions(vector<PhysicsObject*> & otherObjects, float dTime);
     
     // Update position
     virtual void move(float dTime);
@@ -74,6 +74,9 @@ public:
     inline const ofVec2f  & getLastVelocity() { return lastVelocity; };
     
 protected:
+
+    // Collide with other objects
+    virtual void collide(PhysicsObject * otherObject, float dTime);
     
     bool    isAnchored;
     bool    isSolid;
