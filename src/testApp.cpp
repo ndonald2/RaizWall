@@ -3,7 +3,7 @@
 #include "CircularParticlePhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
-#define NUM_DOTS        2500
+#define NUM_DOTS        10000
 #define ICON_SIZE_MIN   35
 #define ICON_SIZE_MAX   50
 #define MOUSE_RIGHT     2

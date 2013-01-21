@@ -8,6 +8,28 @@
 
 #include "PhysicsManager.h"
 
+PhysicsManager::PhysicsManager()
+{
+#if USE_THREADED_UPDATES
+    for (int i=0; i<NUM_UPDATE_THREADS; i++)
+    {
+        moveOperations[i].startThread();
+        updateOperations[i].startThread();
+    }
+#endif
+}
+
+PhysicsManager::~PhysicsManager()
+{
+#if USE_THREADED_UPDATES
+    for (int i=0; i<NUM_UPDATE_THREADS; i++)
+    {
+        moveOperations[i].waitForThread(true);
+        updateOperations[i].waitForThread(true);
+    }
+#endif
+}
+
 void PhysicsManager::addActiveObject(ActivePhysicsObject *object)
 {
     mutex.lock();
@@ -84,10 +106,18 @@ void PhysicsManager::update(float dTime)
         }
         
         // wait for operations to finish
-        for (int i=0; i<NUM_UPDATE_THREADS; i++)
-        {
-            moveOperations[i].waitForThread();
-        }
+        bool threadsFinished;
+        do {
+            
+            threadsFinished = true;
+            for (int i=0; i<NUM_UPDATE_THREADS; i++){
+                if (moveOperations[i].getIsProcessing()){
+                    threadsFinished = false;
+                    break;
+                }
+            };
+            
+        } while (!threadsFinished);
         
     #else
         
@@ -121,10 +151,17 @@ void PhysicsManager::update(float dTime)
             }
             
             // wait for operations to finish
-            for (int i=0; i<NUM_UPDATE_THREADS; i++)
-            {
-                updateOperations[i].waitForThread();
-            }
+            do {
+                
+                threadsFinished = true;
+                for (int i=0; i<NUM_UPDATE_THREADS; i++){
+                    if (updateOperations[i].getIsProcessing()){
+                        threadsFinished = false;
+                        break;
+                    }
+                };
+                
+            } while (!threadsFinished);
         }
         
     #else

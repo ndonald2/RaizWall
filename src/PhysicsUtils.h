@@ -14,12 +14,15 @@
 class PhysicsMoveOperation : public ofThread
 {
 public:
+    PhysicsMoveOperation();
     void performMoves(vector<PhysicsObject*>::iterator begin, vector<PhysicsObject*>::iterator end, float dTime);
+    bool getIsProcessing() { return isProcessing; };
     
 protected:
     void threadedFunction();
     
 private:
+    bool  isProcessing;
     float _dTime;
     vector<PhysicsObject*>::iterator _begin;
     vector<PhysicsObject*>::iterator _end;
@@ -28,12 +31,18 @@ private:
 class PhysicsUpdateOperation : public ofThread
 {
 public:
-    void performUpdates(ActivePhysicsObject * activeObject, vector<PhysicsObject*>::iterator begin, vector<PhysicsObject*>::iterator end, float dTime);
     
+    PhysicsUpdateOperation();
+    void performUpdates(ActivePhysicsObject * activeObject, vector<PhysicsObject*>::iterator begin, vector<PhysicsObject*>::iterator end, float dTime);
+    bool getIsProcessing() { return isProcessing; };
+
 protected:
     void threadedFunction();
     
 private:
+    
+    bool  isProcessing;
+
     float                      _dTime;
     ActivePhysicsObject *      _activeObject;
     vector<PhysicsObject*>::iterator _begin;
