@@ -81,7 +81,7 @@ void PhysicsObject::move(float dTime, const ofVec2f & windowSize)
         }
         
         // calculate accel based on force
-        ofVec2f acceleration = mass > 0 ? getForce()/mass : ofVec2f::zero();
+        acceleration = mass > 0 ? getForce()/mass : ofVec2f::zero();
         lastVelocity = velocity;
         velocity += acceleration*dTime;
         
@@ -211,18 +211,27 @@ void PhysicsObject::collide(PhysicsObject *otherObject, float dTime)
 
 void PhysicsObject::setForce(const ofVec2f & newForce)
 {
+#if USE_FORCE_MUTEX
     forceMutex.lock();
     force = newForce;
     forceMutex.unlock();
+#else
+    force = newForce;
+#endif
 }
 
 void PhysicsObject::addForce(const ofVec2f & forceToAdd)
 {
+#if USE_FORCE_MUTEX
     forceMutex.lock();
     force += forceToAdd;
     forceMutex.unlock();
+#else
+    force += forceToAdd;
+#endif
 }
 
+#if USE_FORCE_MUTEX
 const ofVec2f PhysicsObject::getForce()
 {
     forceMutex.lock();
@@ -230,6 +239,12 @@ const ofVec2f PhysicsObject::getForce()
     forceMutex.unlock();
     return returnForce;
 }
+#else
+const ofVec2f & PhysicsObject::getForce()
+{
+    return force;
+}
+#endif
 
 #pragma mark - Setters and Getters
 

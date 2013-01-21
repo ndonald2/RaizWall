@@ -8,6 +8,8 @@
 
 #include "PhysicsUtils.h"
 
+#define PHY_THREAD_SLEEP_US 800
+
 #pragma mark - Move operation
 
 PhysicsThreadedOperation::PhysicsThreadedOperation(){
@@ -69,6 +71,6 @@ void PhysicsThreadedOperation::threadedFunction()
 
             isProcessing = false;
         }
-        usleep(100);
+        usleep(PHY_THREAD_SLEEP_US);
     }
 }

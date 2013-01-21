@@ -1,6 +1,5 @@
 #include "testApp.h"
 
-#define NUM_DOTS        8000
 #define ICON_SIZE_MIN   10
 #define ICON_SIZE_MAX   20
 #define MOUSE_RIGHT     2
@@ -9,6 +8,7 @@
 void testApp::setup(){
     
     ofSetCircleResolution(32);
+    glPointSize(1.5);
     
     setupOpenNI();
     
@@ -21,13 +21,17 @@ void testApp::setup(){
     mouseGravitron->setMinDistanceThresh(200);
     physicsManager.addActiveObject(mouseGravitron);
     
-    for (int i=0; i<NUM_DOTS; i++){
-        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(1.0f,3.0f), ofColor::fromHsb(0, ofRandom(160,255), 255));
+    particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
+    
+    for (int i=0; i<NUM_PARTICLES; i++){
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(1.0f,3.0f));
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.75f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addPassiveObject(dot);
         particles.push_back(dot);
+        particleVboMesh.addVertex(dot->getPosition());
+        particleVboMesh.addColor(ofColor());
     }
     
     // These are repeating. Need to get more icons.
@@ -73,13 +77,15 @@ void testApp::update(){
     mouseGravitron->setPosition(ofVec2f(mouseX,mouseY));
     physicsManager.update(ofGetLastFrameTime()*timeScale);
     
+    // update particle positions in array (for fast drawing) and colors    
     ofColor baseColor = ofColor(87,0,194).lerp(ofColor(190,0,0), cosf(ofGetElapsedTimef()*0.2f*M_PI)*0.5 + 0.5);
     for (int i=0; i<particles.size(); i++)
     {
         float interpFactor = (i % 250)/500.0f;
         ofColor dotColor = baseColor;
         dotColor.lerp(ofColor(255,255,255), interpFactor);
-        particles[i]->setColor(dotColor);
+        particleVboMesh.setVertex(i, particles[i]->getPosition());
+        particleVboMesh.setColor(i, dotColor);
     }
 }
 
@@ -91,14 +97,12 @@ void testApp::draw(){
     // Do something more interesting with this
     // IDEA:    Shader using depth texture and image texture to threshold pixels, draw them in a more interesting way...
     //          Could use trails to create a neat effect on user's body as they move around
-    ofPushStyle();
-    ofSetColor(200, 200, 200);
-    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
-    ofPopStyle();
+//    ofPushStyle();
+//    ofSetColor(200, 200, 200);
+//    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
+//    ofPopStyle();
     
-    physicsManager.draw();
-    
-    // handManager.draw();
+    particleVboMesh.drawVertices();    
 }
 
 //--------------------------------------------------------------

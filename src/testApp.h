@@ -3,12 +3,14 @@
 #include "ofMain.h"
 #include "PhysicsManager.h"
 #include "GravitationalPhysicsObject.h"
-#include "CircularParticlePhysicsObject.h"
+#include "ParticlePhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 #include "ofxOpenNI.h"
 #include "ofxHardwareDriver.h"
 #include "HandManager.h"
 #include <map.h>
+
+#define NUM_PARTICLES        25000
 
 class testApp : public ofBaseApp{
     
@@ -32,14 +34,16 @@ class testApp : public ofBaseApp{
         PhysicsManager                  physicsManager;
         HandManager                     handManager;
     
-        GravitationalPhysicsObject              *mouseGravitron;
-        vector<CircularParticlePhysicsObject*>  particles;
+        GravitationalPhysicsObject      *mouseGravitron;
+        vector<ParticlePhysicsObject*>  particles;
 
         float                           timeScale;
     
         ofxOpenNI                       openNIDevice;
         ofxHardwareDriver               kinectHardwareDriver;
         int                             kinectTiltAngle;
+    
+        ofVboMesh                       particleVboMesh;
 
         void                            setupOpenNI();
 };

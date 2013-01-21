@@ -8,6 +8,8 @@
 
 #include "PhysicsManager.h"
 
+#define PHY_THREAD_COMPLETE_WAIT_US 500
+
 PhysicsManager::PhysicsManager()
 {
 #if USE_THREADED_UPDATES
@@ -108,7 +110,7 @@ void PhysicsManager::update(float dTime)
         bool threadsFinished;
         do {
             
-            usleep(100);
+            usleep(PHY_THREAD_COMPLETE_WAIT_US);
             
             threadsFinished = true;
             for (int i=0; i<NUM_UPDATE_THREADS; i++){
@@ -155,7 +157,7 @@ void PhysicsManager::update(float dTime)
             // wait for operations to finish
             do {
                 
-                usleep(100);
+                usleep(PHY_THREAD_COMPLETE_WAIT_US);
                 
                 threadsFinished = true;
                 for (int i=0; i<NUM_UPDATE_THREADS; i++){

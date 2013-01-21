@@ -11,6 +11,8 @@
 
 #include "ofMain.h"
 
+#define USE_FORCE_MUTEX 0
+
 // Base physics object is "passive" - it does not apply forces, only reacts to them
 
 class PhysicsObject {
@@ -38,10 +40,16 @@ public:
     virtual void draw() {};
     
     // --------- Forces -------------
-    // These must be mutexed! Can update forces on multiple threads
+    // These can be updated on multiple threads. Not sure whether mutex is absolutely critical or not.
+    // Thus, you can disable it at the top.
     inline void setForce(const ofVec2f & newForce);
     inline void addForce(const ofVec2f & forceToAdd);
+    
+#if USE_FORCE_MUTEX
     inline const ofVec2f getForce();
+#else
+    inline const ofVec2f & getForce();
+#endif
     
     //--------- Setters ------------
     
@@ -87,6 +95,7 @@ protected:
     float   boundingRadius;
     
     ofVec2f force;
+    ofVec2f acceleration;
     ofVec2f position;
     ofVec2f lastPosition;
     ofVec2f velocity;

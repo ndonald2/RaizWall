@@ -23,7 +23,6 @@
 		9A40878D16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */; };
 		9A642CAE16A0810000A7F137 /* PhysicsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */; };
 		9A642CB116A0811700A7F137 /* PhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */; };
-		9A642CB516A0830800A7F137 /* CircularParticlePhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CB316A0830800A7F137 /* CircularParticlePhysicsObject.cpp */; };
 		9A642CB816A0B34100A7F137 /* GravitationalPhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CB616A0B34000A7F137 /* GravitationalPhysicsObject.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		C8C8451C16A4A92900BCFACA /* ofxHardwareDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8C844D516A4A92900BCFACA /* ofxHardwareDriver.cpp */; };
@@ -114,14 +113,13 @@
 		019B552315559DDC00319062 /* ofxWindowApp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ofxWindowApp.xib; sourceTree = "<group>"; };
 		019B55271555A0CB00319062 /* SetupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupWindowController.h; sourceTree = "<group>"; };
 		019B55281555A0CB00319062 /* SetupWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SetupWindowController.mm; sourceTree = "<group>"; };
+		9A0F69CC16ADCCA100DEC48B /* ParticlePhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticlePhysicsObject.h; sourceTree = "<group>"; };
 		9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageBlobPhysicsObject.cpp; sourceTree = "<group>"; };
 		9A40878C16A4BAA800D8DAFB /* ImageBlobPhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageBlobPhysicsObject.h; sourceTree = "<group>"; };
 		9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsManager.cpp; sourceTree = "<group>"; };
 		9A642CAD16A0810000A7F137 /* PhysicsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsManager.h; sourceTree = "<group>"; };
 		9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsObject.cpp; sourceTree = "<group>"; };
 		9A642CB016A0811700A7F137 /* PhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsObject.h; sourceTree = "<group>"; };
-		9A642CB316A0830800A7F137 /* CircularParticlePhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CircularParticlePhysicsObject.cpp; sourceTree = "<group>"; };
-		9A642CB416A0830800A7F137 /* CircularParticlePhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircularParticlePhysicsObject.h; sourceTree = "<group>"; };
 		9A642CB616A0B34000A7F137 /* GravitationalPhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GravitationalPhysicsObject.cpp; sourceTree = "<group>"; };
 		9A642CB716A0B34100A7F137 /* GravitationalPhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GravitationalPhysicsObject.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -397,10 +395,9 @@
 				9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */,
 				9A642CB016A0811700A7F137 /* PhysicsObject.h */,
 				9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */,
+				9A0F69CC16ADCCA100DEC48B /* ParticlePhysicsObject.h */,
 				9A642CB716A0B34100A7F137 /* GravitationalPhysicsObject.h */,
 				9A642CB616A0B34000A7F137 /* GravitationalPhysicsObject.cpp */,
-				9A642CB416A0830800A7F137 /* CircularParticlePhysicsObject.h */,
-				9A642CB316A0830800A7F137 /* CircularParticlePhysicsObject.cpp */,
 				9A40878C16A4BAA800D8DAFB /* ImageBlobPhysicsObject.h */,
 				9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */,
 				F205992416A32FFF00730218 /* PhysicsUtils.h */,
@@ -847,7 +844,6 @@
 				011CBEE516065BE200AB7A1A /* testApp.cpp in Sources */,
 				9A642CAE16A0810000A7F137 /* PhysicsManager.cpp in Sources */,
 				9A642CB116A0811700A7F137 /* PhysicsObject.cpp in Sources */,
-				9A642CB516A0830800A7F137 /* CircularParticlePhysicsObject.cpp in Sources */,
 				9A642CB816A0B34100A7F137 /* GravitationalPhysicsObject.cpp in Sources */,
 				F205992516A32FFF00730218 /* PhysicsUtils.cpp in Sources */,
 				9A40878D16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp in Sources */,
