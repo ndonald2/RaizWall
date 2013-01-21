@@ -13,8 +13,7 @@ PhysicsManager::PhysicsManager()
 #if USE_THREADED_UPDATES
     for (int i=0; i<NUM_UPDATE_THREADS; i++)
     {
-        moveOperations[i].startThread();
-        updateOperations[i].startThread();
+        threadedOperations[i].startThread();
     }
 #endif
 }
@@ -24,8 +23,7 @@ PhysicsManager::~PhysicsManager()
 #if USE_THREADED_UPDATES
     for (int i=0; i<NUM_UPDATE_THREADS; i++)
     {
-        moveOperations[i].waitForThread(true);
-        updateOperations[i].waitForThread(true);
+        threadedOperations[i].waitForThread(true);
     }
 #endif
 }
@@ -96,22 +94,25 @@ void PhysicsManager::update(float dTime)
     #if USE_THREADED_UPDATES
         
         int objOffset = 0;
-        int objChunkSize = allObjects.size()/NUM_UPDATE_THREADS;
+        int objChunkSize = MAX(allObjects.size()/NUM_UPDATE_THREADS, 1);
         
         for (int i=0; i<NUM_UPDATE_THREADS; i++)
         {
+            if (i*objChunkSize >= allObjects.size()) break;
             vector<PhysicsObject*>::iterator first = allObjects.begin() + i*objChunkSize;
             vector<PhysicsObject*>::iterator last = (i == NUM_UPDATE_THREADS - 1) ? allObjects.end() : first + objChunkSize;
-            moveOperations[i].performMoves(first, last, dTime);
+            threadedOperations[i].performMoves(first, last, dTime);
         }
         
         // wait for operations to finish
         bool threadsFinished;
         do {
             
+            usleep(100);
+            
             threadsFinished = true;
             for (int i=0; i<NUM_UPDATE_THREADS; i++){
-                if (moveOperations[i].getIsProcessing()){
+                if (threadedOperations[i].getIsProcessing()){
                     threadsFinished = false;
                     break;
                 }
@@ -123,11 +124,11 @@ void PhysicsManager::update(float dTime)
         
         for (int i=0; i<activeObjects.size(); i++)
         {
-            activeObjects[i]->move(dTime);
+            activeObjects[i]->move(dTime, ofGetWindowSize());
         }
         for (int i=0; i<passiveObjects.size(); i++)
         {
-            passiveObjects[i]->move(dTime);
+            passiveObjects[i]->move(dTime, ofGetWindowSize());
         }
         
     #endif
@@ -145,17 +146,20 @@ void PhysicsManager::update(float dTime)
         
             for (int i=0; i<NUM_UPDATE_THREADS; i++)
             {
+                if (i*objChunkSize >= allObjects.size()) break;
                 vector<PhysicsObject*>::iterator first = allObjects.begin() + i*objChunkSize;
                 vector<PhysicsObject*>::iterator last = (i == NUM_UPDATE_THREADS - 1) ? allObjects.end() : first + objChunkSize;
-                updateOperations[i].performUpdates(activeObjects[a], first, last, dTime);
+                threadedOperations[i].performUpdates(activeObjects[a], first, last, dTime);
             }
             
             // wait for operations to finish
             do {
                 
+                usleep(100);
+                
                 threadsFinished = true;
                 for (int i=0; i<NUM_UPDATE_THREADS; i++){
-                    if (updateOperations[i].getIsProcessing()){
+                    if (threadedOperations[i].getIsProcessing()){
                         threadsFinished = false;
                         break;
                     }

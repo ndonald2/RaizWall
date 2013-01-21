@@ -14,7 +14,7 @@
 #include "ofMain.h"
 
 #define USE_THREADED_UPDATES  1
-#define NUM_UPDATE_THREADS    2
+#define NUM_UPDATE_THREADS    4
 
 class PhysicsManager {
 
@@ -48,8 +48,7 @@ private:
     Poco::Mutex                     mutex;
     
 #if USE_THREADED_UPDATES
-    PhysicsMoveOperation            moveOperations[NUM_UPDATE_THREADS];
-    PhysicsUpdateOperation          updateOperations[NUM_UPDATE_THREADS];
+    PhysicsThreadedOperation        threadedOperations[NUM_UPDATE_THREADS];
 #endif
 };
 

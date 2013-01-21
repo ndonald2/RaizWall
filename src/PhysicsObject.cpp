@@ -54,7 +54,7 @@ void PhysicsObject::handleCollisions(vector<PhysicsObject *> &otherObjects, floa
     }
 }
 
-void PhysicsObject::move(float dTime)
+void PhysicsObject::move(float dTime, const ofVec2f & windowSize)
 {
     // Update position
     if (!isAnchored){
@@ -65,19 +65,19 @@ void PhysicsObject::move(float dTime)
             velocity.x *= -collisionMultiplier;
             position.x = boundingRadius;
         }
-        else if (position.x + boundingRadius > ofGetWidth())
+        else if (position.x + boundingRadius > windowSize.x)
         {
             velocity.x *= -collisionMultiplier;
-            position.x = ofGetWidth() - boundingRadius;
+            position.x = windowSize.x - boundingRadius;
         }
         
         if (position.y - boundingRadius < 0){
             velocity.y *= -collisionMultiplier;
             position.y = boundingRadius;
         }
-        else if (position.y + boundingRadius > ofGetHeight()){
+        else if (position.y + boundingRadius > windowSize.y){
             velocity.y *= -collisionMultiplier;
-            position.y = ofGetHeight() - boundingRadius;
+            position.y = windowSize.y - boundingRadius;
         }
         
         // calculate accel based on force

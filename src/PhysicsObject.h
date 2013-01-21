@@ -22,8 +22,8 @@ public:
     // Handle collisions with other objects
     virtual void handleCollisions(vector<PhysicsObject*> & otherObjects, float dTime);
     
-    // Update position
-    virtual void move(float dTime);
+    // Update position and bounce off walls
+    virtual void move(float dTime, const ofVec2f & windowSize); // TODO: Get rid of window size in favor of "wall" objects
 
     // Are we intersecting? Basic bounding radius test (can be overridden)
     virtual bool intersecting(PhysicsObject * otherObject);
@@ -92,7 +92,7 @@ protected:
     ofVec2f velocity;
     ofVec2f lastVelocity;
     
-    Poco::Mutex forceMutex;
+    Poco::FastMutex forceMutex;
     
 };
 

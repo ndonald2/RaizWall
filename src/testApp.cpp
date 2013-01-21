@@ -3,7 +3,7 @@
 #include "CircularParticlePhysicsObject.h"
 #include "ImageBlobPhysicsObject.h"
 
-#define NUM_DOTS        10000
+#define NUM_DOTS        6000
 #define ICON_SIZE_MIN   35
 #define ICON_SIZE_MAX   50
 #define MOUSE_RIGHT     2
@@ -27,7 +27,7 @@ void testApp::setup(){
     for (int i=0; i<NUM_DOTS; i++){
         CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(1.0f,2.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
         dot->setIsSolid(false);
-        dot->setAmbientFriction(0.5f);
+        dot->setAmbientFriction(0.9f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addPassiveObject(dot);
     }
