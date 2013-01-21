@@ -8,10 +8,8 @@
 
 #include "HandManager.h"
 
-#define MIN_DEPTH       400
-#define MAX_DEPTH       3000
-#define MIN_STRENGTH    100
-#define MAX_STRENGTH    1e6
+#define REPULSOR_THRESH     1000
+#define GRAVITRON_MASS      2e6
 
 #define HAND_LOGGING    0
 
@@ -28,7 +26,7 @@ void HandManager::setup(ofxOpenNI * openNIDevice, PhysicsManager * manager) {
     ofAddListener(openNIDevice->handEvent, this, &HandManager::handEvent);
     
     // Temporarily disabling this. Attractors are more interesting currently
-    // ofAddListener(openNIDevice->gestureEvent, this, &HandManager::gestureEvent);
+    //ofAddListener(openNIDevice->gestureEvent, this, &HandManager::gestureEvent);
 }
 
 void HandManager::update() {
@@ -91,7 +89,7 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         GravitationalPhysicsObject * gravitron = new GravitationalPhysicsObject();
                 
         gravitron->setIsRepulsor(areRepulsors);
-        gravitron->setMass(1e6);
+        gravitron->setMass(GRAVITRON_MASS);
         gravitron->setIsSolid(false);
         gravitron->setIsAnchored(true);
         gravitron->setPosition(ofGetWindowSize()/2.0f);
@@ -131,10 +129,7 @@ void HandManager::gestureEvent(ofxOpenNIGestureEvent & event) {
 void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition) {
     int x = (openNIPosition.x / openNIDevice->getWidth()) * ofGetWidth();
     int y = (openNIPosition.y / openNIDevice->getHeight()) * ofGetHeight();
-    float depth = ofNormalize(openNIPosition.z, MIN_DEPTH, MAX_DEPTH);
-    depth = ofClamp(depth, 0, 1);
-    float strength = ofLerp(MAX_STRENGTH, MIN_STRENGTH, depth);
-    gravitron->setMass(strength);
+    gravitron->setIsRepulsor(openNIPosition.z < REPULSOR_THRESH);
     gravitron->setPosition(ofVec2f(x, y));
 }
 

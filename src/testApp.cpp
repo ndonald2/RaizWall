@@ -1,11 +1,8 @@
 #include "testApp.h"
 
-#include "CircularParticlePhysicsObject.h"
-#include "ImageBlobPhysicsObject.h"
-
-#define NUM_DOTS        6000
-#define ICON_SIZE_MIN   35
-#define ICON_SIZE_MAX   50
+#define NUM_DOTS        8000
+#define ICON_SIZE_MIN   10
+#define ICON_SIZE_MAX   20
 #define MOUSE_RIGHT     2
 
 //--------------------------------------------------------------
@@ -13,7 +10,7 @@ void testApp::setup(){
     
     ofSetCircleResolution(32);
     
-    //setupOpenNI();
+    setupOpenNI();
     
     // add objects to physics manager
     mouseGravitron = new GravitationalPhysicsObject();
@@ -25,11 +22,12 @@ void testApp::setup(){
     physicsManager.addActiveObject(mouseGravitron);
     
     for (int i=0; i<NUM_DOTS; i++){
-        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(1.0f,2.0f), ofColor::fromHsb(0, ofRandom(60,255), 255));
+        CircularParticlePhysicsObject * dot = new CircularParticlePhysicsObject(ofRandom(1.0f,3.0f), ofColor::fromHsb(0, ofRandom(160,255), 255));
         dot->setIsSolid(false);
-        dot->setAmbientFriction(0.9f);
+        dot->setAmbientFriction(0.75f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addPassiveObject(dot);
+        particles.push_back(dot);
     }
     
     // These are repeating. Need to get more icons.
@@ -39,10 +37,10 @@ void testApp::setup(){
 //    for (int i=0; i<6; i++){
 //        imageBlob = new ImageBlobPhysicsObject(iconNames[i], ofRandom(ICON_SIZE_MIN, ICON_SIZE_MAX));
 //        imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-//        imageBlob->setAmbientFriction(0.01);
-//        physicsManager.addObject(imageBlob);
+//        imageBlob->setAmbientFriction(0.5f);
+//        physicsManager.addPassiveObject(imageBlob);
 //    }
-    
+//    
     timeScale = 1.0f;
     
 }
@@ -70,10 +68,19 @@ void testApp::setupOpenNI() {
 
 //--------------------------------------------------------------
 void testApp::update(){
-    //openNIDevice.update();
-    //handManager.update();
+    openNIDevice.update();
+    handManager.update();
     mouseGravitron->setPosition(ofVec2f(mouseX,mouseY));
     physicsManager.update(ofGetLastFrameTime()*timeScale);
+    
+    ofColor baseColor = ofColor(87,0,194).lerp(ofColor(190,0,0), cosf(ofGetElapsedTimef()*0.2f*M_PI)*0.5 + 0.5);
+    for (int i=0; i<particles.size(); i++)
+    {
+        float interpFactor = (i % 250)/500.0f;
+        ofColor dotColor = baseColor;
+        dotColor.lerp(ofColor(255,255,255), interpFactor);
+        particles[i]->setColor(dotColor);
+    }
 }
 
 //--------------------------------------------------------------

@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "PhysicsManager.h"
 #include "GravitationalPhysicsObject.h"
+#include "CircularParticlePhysicsObject.h"
+#include "ImageBlobPhysicsObject.h"
 #include "ofxOpenNI.h"
 #include "ofxHardwareDriver.h"
 #include "HandManager.h"
@@ -28,9 +30,11 @@ class testApp : public ofBaseApp{
     private:
     
         PhysicsManager                  physicsManager;
-        GravitationalPhysicsObject      *mouseGravitron;
         HandManager                     handManager;
     
+        GravitationalPhysicsObject              *mouseGravitron;
+        vector<CircularParticlePhysicsObject*>  particles;
+
         float                           timeScale;
     
         ofxOpenNI                       openNIDevice;
