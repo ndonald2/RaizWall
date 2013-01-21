@@ -8,9 +8,10 @@
 #include "ofxOpenNI.h"
 #include "ofxHardwareDriver.h"
 #include "HandManager.h"
+#include "ofxFadingFbo.h"
 #include <map.h>
 
-#define NUM_PARTICLES        25000
+#define NUM_PARTICLES   2500
 
 class testApp : public ofBaseApp{
     
@@ -42,6 +43,8 @@ class testApp : public ofBaseApp{
         ofxOpenNI                       openNIDevice;
         ofxHardwareDriver               kinectHardwareDriver;
         int                             kinectTiltAngle;
+    
+        ofxFadingFbo                    fadingFbo;
     
         ofVboMesh                       particleVboMesh;
 

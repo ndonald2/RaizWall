@@ -11,6 +11,8 @@
 
 #include "ofMain.h"
 
+// Do we need to use a mutex for forces?
+// They might be modified by different threads simultaneously
 #define USE_FORCE_MUTEX 0
 
 // Base physics object is "passive" - it does not apply forces, only reacts to them

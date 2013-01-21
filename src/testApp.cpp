@@ -8,7 +8,11 @@
 void testApp::setup(){
     
     ofSetCircleResolution(32);
-    glPointSize(1.5);
+    glEnable(GL_POINT_SMOOTH);
+    glPointSize(3.0);
+    
+    fadingFbo.allocate(ofGetWidth(), ofGetHeight());
+    fadingFbo.setAlphaFadeMs(80);
     
     setupOpenNI();
     
@@ -26,7 +30,7 @@ void testApp::setup(){
     for (int i=0; i<NUM_PARTICLES; i++){
         ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(1.0f,3.0f));
         dot->setIsSolid(false);
-        dot->setAmbientFriction(0.75f);
+        dot->setAmbientFriction(0.4f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addPassiveObject(dot);
         particles.push_back(dot);
@@ -102,7 +106,11 @@ void testApp::draw(){
 //    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
 //    ofPopStyle();
     
-    particleVboMesh.drawVertices();    
+    fadingFbo.begin();
+    particleVboMesh.drawVertices();
+    fadingFbo.end();
+    
+    fadingFbo.draw(0, 0);
 }
 
 //--------------------------------------------------------------

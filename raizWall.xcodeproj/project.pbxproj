@@ -20,6 +20,8 @@
 		019B552515559E1C00319062 /* ofxWindowApp.xib in Sources */ = {isa = PBXBuildFile; fileRef = 019B552315559DDC00319062 /* ofxWindowApp.xib */; };
 		019B552615559ECD00319062 /* ofxWindowAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019B551C1555941400319062 /* ofxWindowAppDelegate.mm */; };
 		019B55291555A0CB00319062 /* SetupWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019B55281555A0CB00319062 /* SetupWindowController.mm */; };
+		9A0F69EE16ADE45B00DEC48B /* ofxFadingFbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0F69EC16ADE45B00DEC48B /* ofxFadingFbo.cpp */; };
+		9A0F69F616ADE84500DEC48B /* ofxNDUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0F69F416ADE84500DEC48B /* ofxNDUtils.cpp */; };
 		9A40878D16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */; };
 		9A642CAE16A0810000A7F137 /* PhysicsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */; };
 		9A642CB116A0811700A7F137 /* PhysicsObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A642CAF16A0811700A7F137 /* PhysicsObject.cpp */; };
@@ -114,6 +116,10 @@
 		019B55271555A0CB00319062 /* SetupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupWindowController.h; sourceTree = "<group>"; };
 		019B55281555A0CB00319062 /* SetupWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SetupWindowController.mm; sourceTree = "<group>"; };
 		9A0F69CC16ADCCA100DEC48B /* ParticlePhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticlePhysicsObject.h; sourceTree = "<group>"; };
+		9A0F69EC16ADE45B00DEC48B /* ofxFadingFbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFadingFbo.cpp; sourceTree = "<group>"; };
+		9A0F69ED16ADE45B00DEC48B /* ofxFadingFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFadingFbo.h; sourceTree = "<group>"; };
+		9A0F69F416ADE84500DEC48B /* ofxNDUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxNDUtils.cpp; sourceTree = "<group>"; };
+		9A0F69F516ADE84500DEC48B /* ofxNDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNDUtils.h; sourceTree = "<group>"; };
 		9A40878B16A4BAA800D8DAFB /* ImageBlobPhysicsObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageBlobPhysicsObject.cpp; sourceTree = "<group>"; };
 		9A40878C16A4BAA800D8DAFB /* ImageBlobPhysicsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageBlobPhysicsObject.h; sourceTree = "<group>"; };
 		9A642CAC16A0810000A7F137 /* PhysicsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsManager.cpp; sourceTree = "<group>"; };
@@ -739,6 +745,10 @@
 				C8C8454516A4B21D00BCFACA /* HandTracking */,
 				011CBEE416065BE200AB7A1A /* testApp.h */,
 				011CBEE316065BE200AB7A1A /* testApp.cpp */,
+				9A0F69ED16ADE45B00DEC48B /* ofxFadingFbo.h */,
+				9A0F69EC16ADE45B00DEC48B /* ofxFadingFbo.cpp */,
+				9A0F69F516ADE84500DEC48B /* ofxNDUtils.h */,
+				9A0F69F416ADE84500DEC48B /* ofxNDUtils.cpp */,
 				019B54EA1555934A00319062 /* Application */,
 				9A642CB216A082CC00A7F137 /* Physics */,
 			);
@@ -851,6 +861,8 @@
 				C8C8451D16A4A92900BCFACA /* ofxOpenNI.cpp in Sources */,
 				C8C8451E16A4A92900BCFACA /* ofxOpenNITypes.cpp in Sources */,
 				C8C8454816A4B22900BCFACA /* HandManager.cpp in Sources */,
+				9A0F69EE16ADE45B00DEC48B /* ofxFadingFbo.cpp in Sources */,
+				9A0F69F616ADE84500DEC48B /* ofxNDUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
