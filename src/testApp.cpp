@@ -1,7 +1,5 @@
 #include "testApp.h"
 
-#define ICON_SIZE_MIN   10
-#define ICON_SIZE_MAX   20
 #define MOUSE_RIGHT     2
 
 //--------------------------------------------------------------
@@ -12,7 +10,7 @@ void testApp::setup(){
     glPointSize(3.0);
     
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
-    fadingFbo.setAlphaFadeMs(80);
+    fadingFbo.setAlphaFadeMs(400);
     
     setupOpenNI();
     
@@ -37,18 +35,9 @@ void testApp::setup(){
         particleVboMesh.addVertex(dot->getPosition());
         particleVboMesh.addColor(ofColor());
     }
+
+    raizLogo.loadImage("images/raiz_logo.png");
     
-    // These are repeating. Need to get more icons.
-//    const string iconNames[6] = {"images/pubget.png", "images/pubget.png", "images/macys.png", "images/macys.png", "images/bloomies.png", "images/bloomies.png"};
-//    
-//    ImageBlobPhysicsObject *imageBlob = NULL;
-//    for (int i=0; i<6; i++){
-//        imageBlob = new ImageBlobPhysicsObject(iconNames[i], ofRandom(ICON_SIZE_MIN, ICON_SIZE_MAX));
-//        imageBlob->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-//        imageBlob->setAmbientFriction(0.5f);
-//        physicsManager.addPassiveObject(imageBlob);
-//    }
-//    
     timeScale = 1.0f;
     
 }
@@ -105,6 +94,10 @@ void testApp::draw(){
 //    ofSetColor(200, 200, 200);
 //    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
 //    ofPopStyle();
+    
+    ofSetRectMode(OF_RECTMODE_CENTER);
+    raizLogo.draw(ofGetWindowSize()/2.0f);
+    ofSetRectMode(OF_RECTMODE_CORNER);
     
     fadingFbo.begin();
     particleVboMesh.drawVertices();

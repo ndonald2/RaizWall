@@ -15,38 +15,41 @@
 
 class testApp : public ofBaseApp{
     
-	public:
-		void setup();
-		void update();
-		void draw();
-		
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y);
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
+public:
+    void setup();
+    void update();
+    void draw();
     
-    private:
-    
-        PhysicsManager                  physicsManager;
-        HandManager                     handManager;
-    
-        GravitationalPhysicsObject      *mouseGravitron;
-        vector<ParticlePhysicsObject*>  particles;
+    void keyPressed(int key);
+    void keyReleased(int key);
+    void mouseMoved(int x, int y);
+    void mouseDragged(int x, int y, int button);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
+    void windowResized(int w, int h);
+    void dragEvent(ofDragInfo dragInfo);
+    void gotMessage(ofMessage msg);
 
-        float                           timeScale;
-    
-        ofxOpenNI                       openNIDevice;
-        ofxHardwareDriver               kinectHardwareDriver;
-        int                             kinectTiltAngle;
-    
-        ofxFadingFbo                    fadingFbo;
-    
-        ofVboMesh                       particleVboMesh;
+private:
 
-        void                            setupOpenNI();
+    void                            setupOpenNI();
+
+
+    PhysicsManager                  physicsManager;
+    HandManager                     handManager;
+
+    GravitationalPhysicsObject      *mouseGravitron;
+    vector<ParticlePhysicsObject*>  particles;
+
+    float                           timeScale;
+
+    ofxOpenNI                       openNIDevice;
+    ofxHardwareDriver               kinectHardwareDriver;
+    int                             kinectTiltAngle;
+
+    ofImage                         raizLogo;
+    ofxFadingFbo                    fadingFbo;
+
+    ofVboMesh                       particleVboMesh;
+
 };
