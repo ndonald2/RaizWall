@@ -6,11 +6,12 @@
 void testApp::setup(){
     
     ofSetCircleResolution(32);
-    glEnable(GL_POINT_SMOOTH);
-    glPointSize(3.0);
     
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
-    fadingFbo.setAlphaFadeMs(400);
+    fadingFbo.setAlphaFadeMs(100);
+
+    // Load shaders
+    particleShader.load("shaders/particle.vert", "shaders/particle.frag");
     
     setupOpenNI();
     
@@ -32,10 +33,13 @@ void testApp::setup(){
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
         physicsManager.addPassiveObject(dot);
         particles.push_back(dot);
+        particleSizes.push_back(dot->getBoundingRadius());
         particleVboMesh.addVertex(dot->getPosition());
         particleVboMesh.addColor(ofColor());
     }
 
+    
+    // Load images
     raizLogo.loadImage("images/raiz_logo.png");
     
     timeScale = 1.0f;
@@ -98,9 +102,27 @@ void testApp::draw(){
     ofSetRectMode(OF_RECTMODE_CENTER);
     raizLogo.draw(ofGetWindowSize()/2.0f);
     ofSetRectMode(OF_RECTMODE_CORNER);
-    
+        
     fadingFbo.begin();
+    
+    particleShader.begin();
+    
+    glEnable(GL_POINT_SMOOTH);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        
+    GLint particleSizeLocation = particleShader.getAttributeLocation("particleSize");
+    glVertexAttribPointer(particleSizeLocation, 1, GL_FLOAT, false, 0, &particleSizes[0]);
+	glBindAttribLocation(particleShader.getProgram(), particleSizeLocation, "particleSize");
+	glEnableVertexAttribArray(particleSizeLocation);
+    
     particleVboMesh.drawVertices();
+    
+    glDisableVertexAttribArray(particleSizeLocation);
+    glDisable(GL_POINT_SMOOTH);
+    glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    
+    particleShader.end();
+    
     fadingFbo.end();
     
     fadingFbo.draw(0, 0);
@@ -165,7 +187,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-
+    fadingFbo.allocate(w, h);
 }
 
 //--------------------------------------------------------------

@@ -58,6 +58,10 @@
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		F205992516A32FFF00730218 /* PhysicsUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F205992316A32FFF00730218 /* PhysicsUtils.cpp */; };
+		F2C4AA9416AE4D4C004988E5 /* trails.frag in Sources */ = {isa = PBXBuildFile; fileRef = F2C4AA9216AE4D4C004988E5 /* trails.frag */; };
+		F2C4AA9516AE4D4C004988E5 /* vanilla.vert in Sources */ = {isa = PBXBuildFile; fileRef = F2C4AA9316AE4D4C004988E5 /* vanilla.vert */; };
+		F2C4AA9716AE4D5D004988E5 /* particle.frag in Sources */ = {isa = PBXBuildFile; fileRef = F2C4AA9616AE4D5D004988E5 /* particle.frag */; };
+		F2C4AA9916AE4D65004988E5 /* particle.vert in Sources */ = {isa = PBXBuildFile; fileRef = F2C4AA9816AE4D65004988E5 /* particle.vert */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -297,6 +301,10 @@
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		F205992316A32FFF00730218 /* PhysicsUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsUtils.cpp; sourceTree = "<group>"; };
 		F205992416A32FFF00730218 /* PhysicsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsUtils.h; sourceTree = "<group>"; };
+		F2C4AA9216AE4D4C004988E5 /* trails.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = trails.frag; sourceTree = "<group>"; };
+		F2C4AA9316AE4D4C004988E5 /* vanilla.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = vanilla.vert; sourceTree = "<group>"; };
+		F2C4AA9616AE4D5D004988E5 /* particle.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = particle.frag; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		F2C4AA9816AE4D65004988E5 /* particle.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = particle.vert; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -730,6 +738,7 @@
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* app-info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
+				F2C4AA9116AE4D4C004988E5 /* shaders */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				011CBEDC16065B7E00AB7A1A /* OtherSources */,
 				018D6F5916065FEE0096A8D1 /* openFrameworks */,
@@ -754,6 +763,18 @@
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
+		};
+		F2C4AA9116AE4D4C004988E5 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				F2C4AA9216AE4D4C004988E5 /* trails.frag */,
+				F2C4AA9316AE4D4C004988E5 /* vanilla.vert */,
+				F2C4AA9616AE4D5D004988E5 /* particle.frag */,
+				F2C4AA9816AE4D65004988E5 /* particle.vert */,
+			);
+			name = shaders;
+			path = bin/data/shaders;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -863,6 +884,10 @@
 				C8C8454816A4B22900BCFACA /* HandManager.cpp in Sources */,
 				9A0F69EE16ADE45B00DEC48B /* ofxFadingFbo.cpp in Sources */,
 				9A0F69F616ADE84500DEC48B /* ofxNDUtils.cpp in Sources */,
+				F2C4AA9416AE4D4C004988E5 /* trails.frag in Sources */,
+				F2C4AA9516AE4D4C004988E5 /* vanilla.vert in Sources */,
+				F2C4AA9716AE4D5D004988E5 /* particle.frag in Sources */,
+				F2C4AA9916AE4D65004988E5 /* particle.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

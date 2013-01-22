@@ -15,7 +15,9 @@ class ofxFadingFbo : public ofFbo
 {
 public:
     
-    void allocate(int width, int height, float fade_ms = 100);
+    ofxFadingFbo(float fade_ms = 100);
+    
+    void allocate(int width, int height);
     void begin();
     void end();
     void draw(float x, float y);

@@ -9,10 +9,17 @@
 #include "ofxFadingFbo.h"
 #include "ofxNDUtils.h"
 
-void ofxFadingFbo::allocate(int width, int height, float fade_ms)
+ofxFadingFbo::ofxFadingFbo( float fade_ms )
 {
     _alphaFadeCoef = msToOnePoleTC(fade_ms);
     _colorFadeCoef = 1.0f;
+}
+
+void ofxFadingFbo::allocate(int width, int height)
+{
+    if (isAllocated()){
+        
+    }
     
     ofFbo::Settings fboSettings;
     fboSettings.width = width;

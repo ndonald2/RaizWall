@@ -11,7 +11,7 @@
 #include "ofxFadingFbo.h"
 #include <map.h>
 
-#define NUM_PARTICLES   2500
+#define NUM_PARTICLES   5000
 
 class testApp : public ofBaseApp{
     
@@ -34,12 +34,12 @@ private:
 
     void                            setupOpenNI();
 
-
     PhysicsManager                  physicsManager;
     HandManager                     handManager;
 
     GravitationalPhysicsObject      *mouseGravitron;
     vector<ParticlePhysicsObject*>  particles;
+    vector<float>                   particleSizes;
 
     float                           timeScale;
 
@@ -49,6 +49,7 @@ private:
 
     ofImage                         raizLogo;
     ofxFadingFbo                    fadingFbo;
+    ofShader                        particleShader;
 
     ofVboMesh                       particleVboMesh;
 
