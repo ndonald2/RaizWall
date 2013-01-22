@@ -25,6 +25,12 @@ void ofxFadingFbo::allocate(int width, int height, float fade_ms)
     
     ofFbo::allocate(fboSettings);
     
+    // clear state
+    ofFbo::begin();
+    activateAllDrawBuffers();
+    ofClear(0, 0, 0, 0);
+    ofFbo::end();
+    
     _fadeShader.load("shaders/vanilla.vert", "shaders/trails.frag");
 }
 
