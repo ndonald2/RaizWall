@@ -8,7 +8,7 @@ void testApp::setup(){
     ofSetCircleResolution(32);
     
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
-    fadingFbo.setAlphaFadeMs(250);
+    fadingFbo.setAlphaFadeMs(80);
 
     // Load shaders
     particleShader.load("shaders/particle.vert", "shaders/particle.frag");
@@ -27,7 +27,7 @@ void testApp::setup(){
     particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
     
     for (int i=0; i<NUM_PARTICLES; i++){
-        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,32.0f));
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f));
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.4f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
@@ -39,9 +39,10 @@ void testApp::setup(){
     }
     
     // Load images
-    ofDisableArbTex();
     raizLogo.loadImage("images/raiz_logo.png");
-    particleTexture.loadImage("images/brush.png");
+    
+    ofDisableArbTex();
+    particleTexture.loadImage("images/gradient_dot.png");
     
     timeScale = 1.0f;
     
