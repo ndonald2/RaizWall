@@ -8,7 +8,7 @@ void testApp::setup(){
     ofSetCircleResolution(32);
     
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
-    fadingFbo.setAlphaFadeMs(100);
+    fadingFbo.setAlphaFadeMs(250);
 
     // Load shaders
     particleShader.load("shaders/particle.vert", "shaders/particle.frag");
@@ -27,7 +27,7 @@ void testApp::setup(){
     particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
     
     for (int i=0; i<NUM_PARTICLES; i++){
-        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(1.0f,3.0f));
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,32.0f));
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.4f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
@@ -37,10 +37,11 @@ void testApp::setup(){
         particleVboMesh.addVertex(dot->getPosition());
         particleVboMesh.addColor(ofColor());
     }
-
     
     // Load images
+    ofDisableArbTex();
     raizLogo.loadImage("images/raiz_logo.png");
+    particleTexture.loadImage("images/brush.png");
     
     timeScale = 1.0f;
     
@@ -105,23 +106,30 @@ void testApp::draw(){
         
     fadingFbo.begin();
     
+    ofEnableAlphaBlending();
+
+    glEnable(GL_POINT_SPRITE_ARB);
+	glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    
     particleShader.begin();
     
-    glEnable(GL_POINT_SMOOTH);
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        
     GLint particleSizeLocation = particleShader.getAttributeLocation("particleSize");
     glVertexAttribPointer(particleSizeLocation, 1, GL_FLOAT, false, 0, &particleSizes[0]);
 	glBindAttribLocation(particleShader.getProgram(), particleSizeLocation, "particleSize");
 	glEnableVertexAttribArray(particleSizeLocation);
     
+    particleTexture.getTextureReference().bind();
+    
     particleVboMesh.drawVertices();
     
-    glDisableVertexAttribArray(particleSizeLocation);
-    glDisable(GL_POINT_SMOOTH);
-    glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    particleTexture.getTextureReference().unbind();
     
+    glDisableVertexAttribArray(particleSizeLocation);
+
     particleShader.end();
+    
+    glDisable(GL_POINT_SPRITE_ARB);
     
     fadingFbo.end();
     

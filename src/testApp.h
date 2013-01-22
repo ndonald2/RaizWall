@@ -50,6 +50,7 @@ private:
     ofImage                         raizLogo;
     ofxFadingFbo                    fadingFbo;
     ofShader                        particleShader;
+    ofImage                         particleTexture;
 
     ofVboMesh                       particleVboMesh;
 
