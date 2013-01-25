@@ -8,6 +8,8 @@
 #define NUM_PARTICLES_MIN       250
 #define NUM_PARTICLES_MAX       10000
 
+#define PARTICLE_SCREEN_SCALE   0.01
+
 #define TRAIL_TIME_MIN          50
 #define TRAIL_TIME_MAX          500
 
@@ -90,8 +92,10 @@ void testApp::setParticleCount(int count)
     }
     
     // add particles
+    float baseSize = ofGetWidth()*PARTICLE_SCREEN_SCALE;
+    
     while (count > particles.size()){
-        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f)*sizeScale);
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(baseSize*0.8,baseSize*1.2)*sizeScale);
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.4f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
@@ -140,8 +144,13 @@ void testApp::draw(){
 //    openNIDevice.drawDepth(0, 0, ofGetWidth(), ofGetHeight());
 //    ofPopStyle();
     
+    static float logoAspect = raizLogo.getWidth()/raizLogo.getHeight();
+    
+    float logoDrawW = ofGetWidth()*0.5f;
+    float logoDrawH = logoDrawW/logoAspect;
+    
     ofSetRectMode(OF_RECTMODE_CENTER);
-    raizLogo.draw(ofGetWindowSize()/2.0f);
+    raizLogo.draw(ofGetWidth()/2.0f, ofGetHeight()/2.0f, logoDrawW, logoDrawH);
     ofSetRectMode(OF_RECTMODE_CORNER);
         
     fadingFbo.begin();
