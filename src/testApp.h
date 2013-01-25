@@ -12,10 +12,6 @@
 #include "ofxOsc.h"
 #include <map.h>
 
-#define NUM_PARTICLES_DEFAULT   2500
-#define NUM_PARTICLES_MIN       250
-#define NUM_PARTICLES_MAX       10000
-
 class testApp : public ofBaseApp{
     
 public:
@@ -34,7 +30,9 @@ public:
     void gotMessage(ofMessage msg);
 
 private:
-
+    
+    void                            processOSCMessages();
+    
     void                            setupOpenNI();
     void                            setParticleCount(int count);
 
@@ -46,6 +44,8 @@ private:
     vector<float>                   particleSizes;
 
     float                           timeScale;
+    float                           sizeScale;
+    ofColor                         particleColor;
 
     ofxOpenNI                       openNIDevice;
     ofxHardwareDriver               kinectHardwareDriver;
@@ -57,5 +57,7 @@ private:
     ofImage                         particleTexture;
 
     ofVboMesh                       particleVboMesh;
+    
+    ofxOscReceiver                  oscReceiver;
 
 };

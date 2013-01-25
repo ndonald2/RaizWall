@@ -2,18 +2,36 @@
 
 #define MOUSE_RIGHT     2
 
+#define OSC_PORT        8000
+
+#define NUM_PARTICLES_DEFAULT   2500
+#define NUM_PARTICLES_MIN       250
+#define NUM_PARTICLES_MAX       5000
+
+#define TRAIL_TIME_MIN          50
+#define TRAIL_TIME_MAX          500
+
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    ofSetCircleResolution(32);
+    sizeScale = 1.0f;
+    timeScale = 1.0f;
+    particleColor = ofColor::fromHsb(60, 255, 255);
     
+    // Setup rendering
+    ofSetCircleResolution(32);
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
     fadingFbo.setAlphaFadeMs(120);
+    particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
 
     // Load shaders
     particleShader.load("shaders/particle.vert", "shaders/particle.frag");
     
+    // Setup Kinect
     setupOpenNI();
+    
+    // Setup OSC
+    oscReceiver.setup(OSC_PORT);
     
     // add objects to physics manager
     mouseGravitron = new GravitationalPhysicsObject();
@@ -24,8 +42,6 @@ void testApp::setup(){
     mouseGravitron->setMinDistanceThresh(200);
     physicsManager.addActiveObject(mouseGravitron);
     
-    particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
-    
     setParticleCount(NUM_PARTICLES_DEFAULT);
     
     // Load images
@@ -33,9 +49,6 @@ void testApp::setup(){
     
     ofDisableArbTex();
     particleTexture.loadImage("images/gradient_dot.png");
-    
-    timeScale = 1.0f;
-    
 }
 
 void testApp::setupOpenNI() {
@@ -78,7 +91,7 @@ void testApp::setParticleCount(int count)
     
     // add particles
     while (count > particles.size()){
-        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f));
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f)*sizeScale);
         dot->setIsSolid(false);
         dot->setAmbientFriction(0.4f);
         dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
@@ -86,7 +99,12 @@ void testApp::setParticleCount(int count)
         particles.push_back(dot);
         particleSizes.push_back(dot->getBoundingRadius());
         particleVboMesh.addVertex(dot->getPosition());
-        particleVboMesh.addColor(ofColor());
+        
+        // brightness based on index
+        ofColor baseColor = particleColor;
+        float interpFactor = (particles.size() % 250)/500.0f;
+        baseColor.lerp(ofColor(255,255,255), interpFactor);
+        particleVboMesh.addColor(baseColor);
     }
 
     physicsManager.unlock();
@@ -94,20 +112,18 @@ void testApp::setParticleCount(int count)
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    processOSCMessages();
+    
     openNIDevice.update();
     handManager.update();
     mouseGravitron->setPosition(ofVec2f(mouseX,mouseY));
     physicsManager.update(ofGetLastFrameTime()*timeScale);
     
     // update particle positions in array (for fast drawing) and colors    
-    ofColor baseColor = ofColor(87,0,194).lerp(ofColor(190,0,0), cosf(ofGetElapsedTimef()*0.2f*M_PI)*0.5 + 0.5);
     for (int i=0; i<particles.size(); i++)
     {
-        float interpFactor = (i % 250)/500.0f;
-        ofColor dotColor = baseColor;
-        dotColor.lerp(ofColor(255,255,255), interpFactor);
         particleVboMesh.setVertex(i, particles[i]->getPosition());
-        particleVboMesh.setColor(i, dotColor);
     }
 }
 
@@ -158,6 +174,67 @@ void testApp::draw(){
     fadingFbo.end();
     
     fadingFbo.draw(0, 0);
+}
+
+void testApp::processOSCMessages()
+{
+    while (oscReceiver.hasWaitingMessages())
+    {
+        ofxOscMessage message;
+        
+        if (!oscReceiver.getNextMessage(&message)){
+            break;
+        }
+        
+        string a = message.getAddress();
+        
+        if (a == "/particles/timeScale")
+        {
+            timeScale = powf(10.0f, message.getArgAsFloat(0));
+        }
+        else if (a == "/particles/count")
+        {
+            setParticleCount(ofMap(message.getArgAsFloat(0), 0.0f, 1.0f, NUM_PARTICLES_MIN, NUM_PARTICLES_MAX, true));
+        }
+        else if (a == "/particles/trailLength")
+        {
+            fadingFbo.setAlphaFadeMs(ofMap(message.getArgAsFloat(0), 0.0f, 1.0f, TRAIL_TIME_MIN, TRAIL_TIME_MAX, true));
+        }
+        else if (a == "/particles/size")
+        {
+            sizeScale = ofMap(message.getArgAsFloat(0), 0.0f, 1.0f, 0.5f, 1.5f, true);
+            
+            for (int i=0; i<particles.size(); i++)
+            {
+                float particleSize = particles[i]->getBoundingRadius();
+                particleSize *= sizeScale;
+                particleSizes[i] = particleSize;
+            }
+        }
+        else if (a == "/particles/friction")
+        {
+            float friction = ofMap(message.getArgAsFloat(0), 0.0f, 1.0f, 0.1f, 0.95f, true);
+            
+            for (int i=0; i<particles.size(); i++)
+            {
+                particles[i]->setAmbientFriction(friction);
+            }
+        }
+        else if (a == "/particles/color")
+        {
+            float hue = ofMap(message.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, 255.0f, true);
+            
+            particleColor = ofColor::fromHsb(hue, 255, 220);
+
+            for (int i = 0; i<particleVboMesh.getNumColors(); i++)
+            {
+                ofColor dotColor = particleColor;
+                float interpFactor = (i % 500)*0.66f/500.0f;
+                dotColor.lerp(ofColor(255,255,255), interpFactor);
+                particleVboMesh.setColor(i, dotColor);
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------

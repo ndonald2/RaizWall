@@ -8,7 +8,7 @@
 
 #include "PhysicsManager.h"
 
-#define PHY_THREAD_COMPLETE_WAIT_US 500
+#define PHY_THREAD_COMPLETE_WAIT_US 1000
 
 PhysicsManager::PhysicsManager()
 {
@@ -41,20 +41,17 @@ void PhysicsManager::addActiveObject(ActivePhysicsObject *object)
 void PhysicsManager::removeActiveObject(ActivePhysicsObject *object)
 {
     mutex.lock();
-    vector<ActivePhysicsObject*>::iterator it = activeObjects.begin();
-    while (it++ != activeObjects.end()){
-        if (*it == object){
-            activeObjects.erase(it);
-            break;
-        }
+    
+    vector<ActivePhysicsObject*>::iterator loc = std::find(activeObjects.begin(), activeObjects.end(), object);
+    if (loc != activeObjects.end()){
+        activeObjects.erase(loc);
     }
-    vector<PhysicsObject*>::iterator ait = allObjects.begin();
-    while (ait++ != allObjects.end()){
-        if (*ait == object){
-            allObjects.erase(ait);
-            break;
-        }
+    
+    vector<PhysicsObject*>::iterator aloc = std::find(allObjects.begin(), allObjects.end(), object);
+    if (aloc != allObjects.end()){
+        allObjects.erase(aloc);
     }
+    
     mutex.unlock();
 }
 
@@ -69,20 +66,17 @@ void PhysicsManager::addPassiveObject(PhysicsObject *object)
 void PhysicsManager::removePassiveObject(PhysicsObject *object)
 {
     mutex.lock();
-    vector<PhysicsObject*>::iterator it = passiveObjects.begin();
-    while (it++ != passiveObjects.end()){
-        if (*it == object){
-            passiveObjects.erase(it);
-            break;
-        }
+    
+    vector<PhysicsObject*>::iterator loc = std::find(passiveObjects.begin(), passiveObjects.end(), object);
+    if (loc != passiveObjects.end()){
+        passiveObjects.erase(loc);
     }
-    vector<PhysicsObject*>::iterator ait = allObjects.begin();
-    while (ait++ != allObjects.end()){
-        if (*ait == object){
-            allObjects.erase(ait);
-            break;
-        }
+    
+    vector<PhysicsObject*>::iterator aloc = std::find(allObjects.begin(), allObjects.end(), object);
+    if (aloc != allObjects.end()){
+        allObjects.erase(aloc);
     }
+    
     mutex.unlock();
 }
 

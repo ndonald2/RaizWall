@@ -264,6 +264,11 @@ void PhysicsObject::setCollisionMultiplier(float multiplier)
     collisionMultiplier = multiplier;
 }
 
+void PhysicsObject::setBoundingRadius(float newRadius)
+{
+    boundingRadius = newRadius;
+}
+
 void PhysicsObject::setMass(float newMass)
 {
     mass = MAX(0, newMass);

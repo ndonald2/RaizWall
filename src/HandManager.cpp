@@ -8,7 +8,7 @@
 
 #include "HandManager.h"
 
-#define REPULSOR_THRESH     1000
+#define REPULSOR_THRESH     1600    // mm
 #define GRAVITRON_MASS      2e6
 
 #define HAND_LOGGING    0

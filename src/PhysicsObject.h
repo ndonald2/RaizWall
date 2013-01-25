@@ -61,6 +61,8 @@ public:
     
     virtual void setCollisionMultiplier(float multiplier);
     
+    virtual void setBoundingRadius(float newRadius);
+    
     virtual void setMass(float newMass);
     
     virtual void setAmbientFriction(float newAmbientFriction);
