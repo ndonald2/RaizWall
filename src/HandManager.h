@@ -23,14 +23,21 @@ class HandManager {
         void draw();
     
     private:
+    
         bool areRepulsors = false;
+    
         PhysicsManager * physicsManager;
         ofxOpenNI * openNIDevice;
+    
         map<XnUserID, GravitationalPhysicsObject*> handGravitrons;
+    
+        map<XnUserID, ofVec3f>                     handPositions;   // for computing velocity vector
+        map<XnUserID, float>                       handZVelocities;
     
         void handEvent(ofxOpenNIHandEvent & event);
         void gestureEvent(ofxOpenNIGestureEvent & event);
         void updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition);
+        void updateVelocity(ofxOpenNIHand & hand);
     
         void setAreRepulsors(bool areRepulsors);
 };

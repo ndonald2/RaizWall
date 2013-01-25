@@ -6,7 +6,7 @@
 
 #define NUM_PARTICLES_DEFAULT   2500
 #define NUM_PARTICLES_MIN       250
-#define NUM_PARTICLES_MAX       5000
+#define NUM_PARTICLES_MAX       10000
 
 #define TRAIL_TIME_MIN          50
 #define TRAIL_TIME_MAX          500
@@ -16,7 +16,7 @@ void testApp::setup(){
     
     sizeScale = 1.0f;
     timeScale = 1.0f;
-    particleColor = ofColor::fromHsb(60, 255, 255);
+    particleColor = ofColor::fromHsb(180, 255, 255);
     
     // Setup rendering
     ofSetCircleResolution(32);

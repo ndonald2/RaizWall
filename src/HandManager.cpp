@@ -8,8 +8,10 @@
 
 #include "HandManager.h"
 
-#define REPULSOR_THRESH     1600    // mm
 #define GRAVITRON_MASS      2e6
+
+#define HAND_VEL_SMOOTHING  0.97
+#define HAND_VEL_THRESH     30.0f
 
 #define HAND_LOGGING    0
 
@@ -36,17 +38,23 @@ void HandManager::update() {
     map<XnUserID, GravitationalPhysicsObject*>::iterator it;
     int numHands = openNIDevice->getNumTrackedHands();
     for (it = handGravitrons.begin(); it != handGravitrons.end(); ++it) {
-        for (int i = 0; i < numHands; i++) {
-            ofxOpenNIHand & hand = openNIDevice->getTrackedHand(i);
-            if (hand.getID() == it->first) {
-                GravitationalPhysicsObject * gravitron = it->second;
-                ofPoint & position = hand.getPosition();
-                updatePosition(gravitron, position);
+        
+        XnUserID handId = it->first;
+        ofxOpenNIHand & hand = openNIDevice->getHand(handId);
+        if (hand.isTracking()){
+           
+            // Move the associated gravitron
+            GravitationalPhysicsObject * gravitron = it->second;
+            ofPoint & position = hand.getPosition();
+            updatePosition(gravitron, position);
+            updateVelocity(hand);
+            
 #if HAND_LOGGING
-                ofLogNotice() << "Updating Hand " << ofToString(hand.getID()) << ", " << ofToString(gravitron->getMass());
+            ofLogNotice() << "Updating Hand " << ofToString(hand.getID()) << ", " << ofToString(gravitron->getMass());
 #endif
-            }
+
         }
+        
     }
     
     physicsManager->unlock();
@@ -100,6 +108,8 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
         physicsManager->addActiveObject(gravitron);
         
         handGravitrons[event.id] = gravitron;
+        handPositions[event.id] = event.position;
+        handZVelocities[event.id] = 0.0f;
     }
     else if (event.handStatus == HAND_TRACKING_STOPPED) {
 
@@ -109,6 +119,8 @@ void HandManager::handEvent(ofxOpenNIHandEvent & event) {
             GravitationalPhysicsObject * gravitron = it->second;
             physicsManager->removeActiveObject(gravitron);
             handGravitrons.erase(event.id);
+            handPositions.erase(event.id);
+            handZVelocities.erase(event.id);
             delete gravitron;
         }
         
@@ -129,8 +141,40 @@ void HandManager::gestureEvent(ofxOpenNIGestureEvent & event) {
 void HandManager::updatePosition(GravitationalPhysicsObject * gravitron, const ofPoint & openNIPosition) {
     int x = (openNIPosition.x / openNIDevice->getWidth()) * ofGetWidth();
     int y = (openNIPosition.y / openNIDevice->getHeight()) * ofGetHeight();
-    gravitron->setIsRepulsor(openNIPosition.z < REPULSOR_THRESH);
     gravitron->setPosition(ofVec2f(x, y));
+}
+
+void HandManager::updateVelocity(ofxOpenNIHand &hand)
+{
+    XnUserID handId = hand.getID();
+    
+    // get diff from last position
+    ofVec3f vel = hand.getPosition() - handPositions[handId];
+    handPositions[handId] = hand.getPosition();
+    
+    // project onto -z axis
+    float zVal = vel.dot(ofVec3f(0,0,-1));
+    float oldZVal = handZVelocities[handId];
+    
+    // some decay
+    if (zVal < oldZVal){
+        zVal *= 1.0f - HAND_VEL_SMOOTHING;
+        zVal += (HAND_VEL_SMOOTHING * oldZVal);
+    }
+
+    handZVelocities[handId] = zVal;
+    
+    GravitationalPhysicsObject *gravitron = handGravitrons[handId];
+    
+    if (zVal >= HAND_VEL_THRESH){
+        gravitron->setIsRepulsor(true);
+    }
+    else{
+        gravitron->setIsRepulsor(false);
+    }
+#if HAND_LOGGING
+    ofLogNotice() << "Z: " << ofToString(zVal);
+#endif
 }
 
 void HandManager::setAreRepulsors(bool areRepulsors) {
