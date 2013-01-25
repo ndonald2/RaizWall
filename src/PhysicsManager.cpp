@@ -8,7 +8,7 @@
 
 #include "PhysicsManager.h"
 
-#define PHY_THREAD_COMPLETE_WAIT_US 1000
+#define PHY_THREAD_COMPLETE_WAIT_US 100
 
 PhysicsManager::PhysicsManager()
 {

@@ -8,7 +8,7 @@
 
 #include "PhysicsUtils.h"
 
-#define PHY_THREAD_SLEEP_US 1000
+#define PHY_THREAD_SLEEP_US 100
 
 #pragma mark - Move operation
 

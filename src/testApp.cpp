@@ -173,7 +173,7 @@ void testApp::draw(){
     
     fadingFbo.end();
     
-    fadingFbo.draw(0, 0);
+    fadingFbo.draw(0, 0);//, ofGetWidth(), ofGetHeight());
 }
 
 void testApp::processOSCMessages()
@@ -296,7 +296,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-    fadingFbo.allocate(w, h);
+
 }
 
 //--------------------------------------------------------------

@@ -110,9 +110,12 @@
 }
 
 - (void)launchGLWindow{
+    
     glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+    ofNotifySetup();
+    
 	[ self.openGLWindow cascadeTopLeftFromPoint : NSMakePoint( 20, 20 ) ];
 	[ self.openGLWindow setTitle: [ [ NSProcessInfo processInfo ] processName ] ];
 	[ self.openGLWindow makeKeyAndOrderFront : nil ];
@@ -124,9 +127,7 @@
 	fps         = 60;
     frameRate   = 60;
 	nFrameCount = 0;
-    
-    ofNotifySetup();
-    
+        
     if( self.windowModeInit == OF_WINDOW )
     {
         [ self.openGLView startAnimation ];
@@ -134,7 +135,7 @@
     else if( self.windowModeInit == OF_FULLSCREEN )
     {
         [ self.openGLView drawView ];       // must first draw content at least once, otherwise textures are not shared between the two opengl contexts.
-        [ self goFullScreenOnAllDisplays ];
+        [ self goFullScreenOnDisplay:0 ];
     }
 }
 
@@ -297,7 +298,10 @@
 	[ self.fullScreenWindow makeKeyAndOrderFront : self ];   // Show the window
 	
     ofSetupScreen();
-	
+    
+    //notify OF of resized fullscreen window
+    ofNotifyWindowResized(displayRect.size.width, displayRect.size.height);
+    
     [ self.fullScreenView startAnimation ];
     
     [ self updateOpenGLContext ];

@@ -13,14 +13,11 @@ ofxFadingFbo::ofxFadingFbo( float fade_ms )
 {
     _alphaFadeCoef = msToOnePoleTC(fade_ms);
     _colorFadeCoef = 1.0f;
+    
 }
 
 void ofxFadingFbo::allocate(int width, int height)
 {
-    if (isAllocated()){
-        
-    }
-    
     ofFbo::Settings fboSettings;
     fboSettings.width = width;
     fboSettings.height = height;
@@ -29,7 +26,7 @@ void ofxFadingFbo::allocate(int width, int height)
     fboSettings.depthStencilAsTexture = false;
     fboSettings.numColorbuffers = 2;
     fboSettings.internalformat = GL_RGBA;
-    
+        
     ofFbo::allocate(fboSettings);
     
     // clear state
@@ -38,7 +35,11 @@ void ofxFadingFbo::allocate(int width, int height)
     ofClear(0, 0, 0, 0);
     ofFbo::end();
     
-    _fadeShader.load("shaders/vanilla.vert", "shaders/trails.frag");
+    // hacky way to determine if fading shader is loaded
+    if (_fadeShader.getProgram() == 0){
+        _fadeShader.load("shaders/vanilla.vert", "shaders/trails.frag");
+    }
+
 }
 
 void ofxFadingFbo::begin()
