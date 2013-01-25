@@ -9,9 +9,12 @@
 #include "ofxHardwareDriver.h"
 #include "HandManager.h"
 #include "ofxFadingFbo.h"
+#include "ofxOsc.h"
 #include <map.h>
 
-#define NUM_PARTICLES   5000
+#define NUM_PARTICLES_DEFAULT   2500
+#define NUM_PARTICLES_MIN       250
+#define NUM_PARTICLES_MAX       10000
 
 class testApp : public ofBaseApp{
     
@@ -33,6 +36,7 @@ public:
 private:
 
     void                            setupOpenNI();
+    void                            setParticleCount(int count);
 
     PhysicsManager                  physicsManager;
     HandManager                     handManager;

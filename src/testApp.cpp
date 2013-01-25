@@ -8,7 +8,7 @@ void testApp::setup(){
     ofSetCircleResolution(32);
     
     fadingFbo.allocate(ofGetWidth(), ofGetHeight());
-    fadingFbo.setAlphaFadeMs(80);
+    fadingFbo.setAlphaFadeMs(120);
 
     // Load shaders
     particleShader.load("shaders/particle.vert", "shaders/particle.frag");
@@ -26,17 +26,7 @@ void testApp::setup(){
     
     particleVboMesh.setUsage(GL_DYNAMIC_DRAW);
     
-    for (int i=0; i<NUM_PARTICLES; i++){
-        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f));
-        dot->setIsSolid(false);
-        dot->setAmbientFriction(0.4f);
-        dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
-        physicsManager.addPassiveObject(dot);
-        particles.push_back(dot);
-        particleSizes.push_back(dot->getBoundingRadius());
-        particleVboMesh.addVertex(dot->getPosition());
-        particleVboMesh.addColor(ofColor());
-    }
+    setParticleCount(NUM_PARTICLES_DEFAULT);
     
     // Load images
     raizLogo.loadImage("images/raiz_logo.png");
@@ -67,6 +57,39 @@ void testApp::setupOpenNI() {
     handManager.setup(&openNIDevice, &physicsManager);
     
     openNIDevice.start();
+}
+
+void testApp::setParticleCount(int count)
+{
+    count = CLAMP(count, NUM_PARTICLES_MIN, NUM_PARTICLES_MAX);
+
+    physicsManager.lock();
+    
+    // remove particles
+    while (count < particles.size())
+    {
+        ParticlePhysicsObject * dot = particles.back();
+        particles.pop_back();
+        particleSizes.pop_back();
+        particleVboMesh.getVertices().pop_back();
+        physicsManager.removePassiveObject(dot);
+        delete dot;
+    }
+    
+    // add particles
+    while (count > particles.size()){
+        ParticlePhysicsObject * dot = new ParticlePhysicsObject(ofRandom(8.0f,20.0f));
+        dot->setIsSolid(false);
+        dot->setAmbientFriction(0.4f);
+        dot->setPosition(ofVec2f(ofGetWidth()*ofRandomuf(), ofGetHeight()*ofRandomuf()));
+        physicsManager.addPassiveObject(dot);
+        particles.push_back(dot);
+        particleSizes.push_back(dot->getBoundingRadius());
+        particleVboMesh.addVertex(dot->getPosition());
+        particleVboMesh.addColor(ofColor());
+    }
+
+    physicsManager.unlock();
 }
 
 //--------------------------------------------------------------
